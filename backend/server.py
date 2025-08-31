@@ -242,9 +242,50 @@ async def create_transfer(transfer_data: TransferCreate, current_user: dict = De
     return Transfer(**transfer_dict)
 
 @api_router.get("/transfers", response_model=List[Transfer])
-async def get_transfers(current_user: dict = Depends(verify_token)):
-    transfers = await db.transfers.find().sort("date", -1).to_list(1000)
+async def get_transfers(
+    status: Optional[str] = None,
+    transfer_type: Optional[str] = None,
+    limit: int = 1000,
+    current_user: dict = Depends(verify_token)
+):
+    query = {}
+    if status and status != "all":
+        query["status"] = status
+    if transfer_type and transfer_type != "all":
+        query["transfer_type"] = transfer_type
+    
+    transfers = await db.transfers.find(query).sort("date", -1).limit(limit).to_list(limit)
     return [Transfer(**transfer) for transfer in transfers]
+
+@api_router.get("/transfers/stats")
+async def get_transfer_stats(current_user: dict = Depends(verify_token)):
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$status",
+                "count": {"$sum": 1},
+                "total_amount": {"$sum": "$amount"}
+            }
+        }
+    ]
+    
+    stats = await db.transfers.aggregate(pipeline).to_list(None)
+    
+    # Calculate overall stats
+    total_transfers = await db.transfers.count_documents({})
+    total_amount = sum(stat["total_amount"] for stat in stats)
+    
+    status_counts = {stat["_id"]: stat["count"] for stat in stats}
+    
+    return {
+        "total_transfers": total_transfers,
+        "total_amount": total_amount,
+        "status_breakdown": status_counts,
+        "pending": status_counts.get("pending", 0),
+        "completed": status_counts.get("completed", 0),
+        "rejected": status_counts.get("rejected", 0),
+        "held": status_counts.get("held", 0)
+    }
 
 @api_router.get("/transfers/{transfer_id}", response_model=Transfer)
 async def get_transfer(transfer_id: str, current_user: dict = Depends(verify_token)):
