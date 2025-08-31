@@ -346,6 +346,65 @@ async def process_transfer_action(action_data: TransferAction, current_user: dic
         message=f"Transfer {action_data.action}d successfully"
     )
 
+@api_router.post("/transfers/bulk-action")
+async def process_bulk_transfer_action(action_data: BulkTransferAction, current_user: dict = Depends(verify_token)):
+    if current_user["role"] not in ["admin", "officer"]:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    
+    if not action_data.transfer_ids:
+        raise HTTPException(status_code=400, detail="No transfer IDs provided")
+    
+    # Process each transfer
+    results = []
+    current_time = datetime.now(timezone.utc)
+    new_status = "completed" if action_data.action == "approve" else action_data.action + "ed"
+    
+    for transfer_id in action_data.transfer_ids:
+        transfer = await db.transfers.find_one({"transfer_id": transfer_id})
+        if not transfer:
+            results.append({"transfer_id": transfer_id, "status": "error", "message": "Transfer not found"})
+            continue
+        
+        # Add action log to SWIFT logs
+        new_log = {
+            "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"BULK ACTION: {action_data.action.upper()} by {current_user['username']}",
+            "level": "SUCCESS" if action_data.action == "approve" else "WARNING"
+        }
+        
+        if action_data.action == "approve":
+            new_log_complete = {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "PIPELINE: Processing -> In Transit -> Completed",
+                "level": "SUCCESS"
+            }
+            transfer["swift_logs"].extend([new_log, new_log_complete])
+            transfer["current_stage"] = "completed"
+            transfer["location"] = "receiving_bank"
+        else:
+            transfer["swift_logs"].append(new_log)
+        
+        transfer["status"] = new_status
+        
+        await db.transfers.update_one(
+            {"transfer_id": transfer_id},
+            {"$set": {"status": new_status, "swift_logs": transfer["swift_logs"], 
+                     "current_stage": transfer["current_stage"], "location": transfer["location"]}}
+        )
+        
+        results.append({"transfer_id": transfer_id, "status": "success", "message": f"Transfer {action_data.action}d successfully"})
+    
+    successful_count = len([r for r in results if r["status"] == "success"])
+    
+    return {
+        "action": action_data.action,
+        "total_requested": len(action_data.transfer_ids),
+        "successful": successful_count,
+        "failed": len(action_data.transfer_ids) - successful_count,
+        "results": results,
+        "message": f"Bulk {action_data.action} completed: {successful_count}/{len(action_data.transfer_ids)} successful"
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
