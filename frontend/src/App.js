@@ -45,7 +45,9 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [transfers, setTransfers] = useState([]);
+  const [filteredTransfers, setFilteredTransfers] = useState([]);
   const [selectedTransfer, setSelectedTransfer] = useState(null);
+  const [selectedTransfers, setSelectedTransfers] = useState([]);
   const [transferForm, setTransferForm] = useState({
     sender_name: '',
     sender_bic: '',
@@ -57,6 +59,17 @@ function App() {
     reference: '',
     purpose: ''
   });
+  const [dashboardFilters, setDashboardFilters] = useState({
+    search: '',
+    status: 'all',
+    type: 'all',
+    dateFrom: null,
+    dateTo: null,
+    amountMin: '',
+    amountMax: ''
+  });
+  const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (token) {
