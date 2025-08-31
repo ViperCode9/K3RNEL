@@ -11,7 +11,31 @@ import { Textarea } from "./components/ui/textarea";
 import { Label } from "./components/ui/label";
 import { Separator } from "./components/ui/separator";
 import { ScrollArea } from "./components/ui/scroll-area";
-import { Terminal, Send, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog";
+import { Checkbox } from "./components/ui/checkbox";
+import { Calendar } from "./components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/popover";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
+import { 
+  Terminal, 
+  Send, 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  AlertCircle, 
+  Search, 
+  Filter, 
+  Download, 
+  Eye, 
+  MoreVertical,
+  Calendar as CalendarIcon,
+  TrendingUp,
+  DollarSign,
+  Activity,
+  Users,
+  RefreshCw,
+  ChevronDown
+} from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
