@@ -78,6 +78,10 @@ function App() {
     }
   }, [token]);
 
+  useEffect(() => {
+    applyFilters();
+  }, [transfers, dashboardFilters]);
+
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(`${API}/auth/me`, {
