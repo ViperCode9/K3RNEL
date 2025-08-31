@@ -34,7 +34,16 @@ import {
   Activity,
   Users,
   RefreshCw,
-  ChevronDown
+  ChevronDown,
+  MapPin,
+  ArrowRight,
+  CheckCircle2,
+  Clock3,
+  AlertTriangle,
+  Navigation,
+  Truck,
+  Building2,
+  Globe
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
