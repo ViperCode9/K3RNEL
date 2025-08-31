@@ -86,6 +86,11 @@ class TransferAction(BaseModel):
     transfer_id: str
     notes: Optional[str] = None
 
+class BulkTransferAction(BaseModel):
+    action: str  # approve, hold, reject
+    transfer_ids: List[str]
+    notes: Optional[str] = None
+
 class ActionResponse(BaseModel):
     action: str
     transfer_id: str
