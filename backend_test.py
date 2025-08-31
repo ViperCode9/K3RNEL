@@ -297,23 +297,43 @@ def main():
     
     print("\n📋 Running Transfer Tests...")
     
-    # Test transfer creation
-    transfer_id = tester.test_create_transfer()
-    if not transfer_id:
+    # Test transfer creation - create multiple transfers for bulk testing
+    transfer_ids = []
+    for i in range(3):
+        transfer_id = tester.test_create_transfer()
+        if transfer_id:
+            transfer_ids.append(transfer_id)
+    
+    if len(transfer_ids) == 0:
         print("❌ Transfer creation failed")
         return 1
+    
+    print(f"✅ Created {len(transfer_ids)} transfers for testing")
     
     # Test getting all transfers
     if not tester.test_get_transfers():
         print("❌ Get transfers failed")
     
     # Test getting specific transfer
-    if not tester.test_get_specific_transfer(transfer_id):
+    if not tester.test_get_specific_transfer(transfer_ids[0]):
         print("❌ Get specific transfer failed")
     
-    # Test transfer action
-    if not tester.test_transfer_action(transfer_id, "approve"):
+    # Test transfer stats
+    if not tester.test_transfer_stats():
+        print("❌ Transfer stats failed")
+    
+    # Test filtered transfers
+    if not tester.test_filtered_transfers():
+        print("❌ Filtered transfers failed")
+    
+    # Test individual transfer action
+    if not tester.test_transfer_action(transfer_ids[0], "approve"):
         print("❌ Transfer action failed")
+    
+    # Test bulk transfer actions (use remaining transfers)
+    if len(transfer_ids) > 1:
+        if not tester.test_bulk_transfer_action(transfer_ids[1:], "hold"):
+            print("❌ Bulk transfer action failed")
     
     # Print final results
     print("\n" + "=" * 50)
