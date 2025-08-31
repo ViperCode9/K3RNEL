@@ -96,6 +96,7 @@ function App() {
   };
 
   const fetchTransfers = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${API}/transfers`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -103,7 +104,61 @@ function App() {
       setTransfers(response.data);
     } catch (error) {
       console.error('Error fetching transfers:', error);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...transfers];
+
+    // Search filter
+    if (dashboardFilters.search) {
+      const search = dashboardFilters.search.toLowerCase();
+      filtered = filtered.filter(transfer => 
+        transfer.sender_name.toLowerCase().includes(search) ||
+        transfer.receiver_name.toLowerCase().includes(search) ||
+        transfer.sender_bic.toLowerCase().includes(search) ||
+        transfer.receiver_bic.toLowerCase().includes(search) ||
+        transfer.reference.toLowerCase().includes(search)
+      );
+    }
+
+    // Status filter
+    if (dashboardFilters.status !== 'all') {
+      filtered = filtered.filter(transfer => transfer.status === dashboardFilters.status);
+    }
+
+    // Type filter
+    if (dashboardFilters.type !== 'all') {
+      filtered = filtered.filter(transfer => transfer.transfer_type === dashboardFilters.type);
+    }
+
+    // Date range filter
+    if (dashboardFilters.dateFrom) {
+      filtered = filtered.filter(transfer => 
+        new Date(transfer.date) >= dashboardFilters.dateFrom
+      );
+    }
+    if (dashboardFilters.dateTo) {
+      filtered = filtered.filter(transfer => 
+        new Date(transfer.date) <= dashboardFilters.dateTo
+      );
+    }
+
+    // Amount range filter
+    if (dashboardFilters.amountMin) {
+      filtered = filtered.filter(transfer => 
+        transfer.amount >= parseFloat(dashboardFilters.amountMin)
+      );
+    }
+    if (dashboardFilters.amountMax) {
+      filtered = filtered.filter(transfer => 
+        transfer.amount <= parseFloat(dashboardFilters.amountMax)
+      );
+    }
+
+    setFilteredTransfers(filtered);
   };
 
   const login = async (e) => {
