@@ -390,6 +390,9 @@ function App() {
             <TabsTrigger value="dashboard" className="data-[state=active]:bg-green-600">
               Dashboard
             </TabsTrigger>
+            <TabsTrigger value="tracker" className="data-[state=active]:bg-green-600">
+              Transfer Tracker
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="simulation" className="space-y-6">
