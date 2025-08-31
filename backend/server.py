@@ -131,56 +131,239 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-def generate_swift_logs(transfer: Transfer) -> List[dict]:
-    """Generate realistic SWIFT terminal logs"""
-    current_time = datetime.now(timezone.utc)
-    logs = [
+def get_transfer_stages() -> List[dict]:
+    """Define the standard transfer stages"""
+    return [
         {
-            "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "message": f"SWIFT NETWORK INITIATED - MSG TYPE: {transfer.transfer_type}",
-            "level": "INFO"
+            "stage_name": "Initiated",
+            "stage_code": "INIT",
+            "location": "sending_bank",
+            "description": "Transfer request received and queued for processing"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": f"SENDING BANK: {transfer.sender_bic}",
-            "level": "INFO"
+            "stage_name": "Validation",
+            "stage_code": "VAL", 
+            "location": "sending_bank",
+            "description": "Validating BIC codes, account details, and transfer format"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": f"RECEIVING BANK: {transfer.receiver_bic}",
-            "level": "INFO"
+            "stage_name": "Compliance Check",
+            "stage_code": "AML",
+            "location": "sending_bank", 
+            "description": "AML/KYC compliance verification and sanctions screening"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": f"AMOUNT: {transfer.currency} {transfer.amount:,.2f}",
-            "level": "INFO"
+            "stage_name": "Authorization",
+            "stage_code": "AUTH",
+            "location": "sending_bank",
+            "description": "Awaiting authorization from authorized personnel"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": f"REFERENCE: {transfer.reference}",
-            "level": "INFO"
+            "stage_name": "Processing",
+            "stage_code": "PROC",
+            "location": "sending_bank",
+            "description": "Processing transfer and preparing for network transmission"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": "VALIDATION: PASSED - BIC CODES VERIFIED",
-            "level": "SUCCESS"
+            "stage_name": "Network Transmission",
+            "stage_code": "NET",
+            "location": "swift_network",
+            "description": "Transmitting through SWIFT network infrastructure"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": "COMPLIANCE CHECK: PASSED - AML/KYC CLEARED",
-            "level": "SUCCESS"
+            "stage_name": "Intermediary Bank",
+            "stage_code": "INT",
+            "location": "intermediary_bank",
+            "description": "Processing at intermediary correspondent bank"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": "PIPELINE: Initiated -> Processing -> Awaiting Approval",
-            "level": "INFO"
+            "stage_name": "Final Settlement",
+            "stage_code": "SETT",
+            "location": "receiving_bank",
+            "description": "Final settlement processing at receiving bank"
         },
         {
-            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
-            "message": f"STATUS: {transfer.status.upper()}",
-            "level": "WARNING" if transfer.status == "pending" else "SUCCESS"
+            "stage_name": "Completed",
+            "stage_code": "COMP",
+            "location": "receiving_bank",
+            "description": "Transfer completed successfully"
         }
     ]
+
+def generate_stage_logs(stage_info: dict, transfer: Transfer) -> List[dict]:
+    """Generate stage-specific SWIFT logs"""
+    current_time = datetime.now(timezone.utc)
+    stage_code = stage_info["stage_code"]
+    logs = []
+    
+    if stage_code == "INIT":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"SWIFT NETWORK INITIATED - MSG TYPE: {transfer.transfer_type}",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"TRANSFER ID: {transfer.transfer_id}",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"AMOUNT: {transfer.currency} {transfer.amount:,.2f}",
+                "level": "INFO"
+            }
+        ]
+    elif stage_code == "VAL":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"VALIDATING BIC: {transfer.sender_bic} -> {transfer.receiver_bic}",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "BIC VALIDATION: PASSED - CODES VERIFIED",
+                "level": "SUCCESS"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"AMOUNT VALIDATION: {transfer.currency} {transfer.amount:,.2f} - PASSED",
+                "level": "SUCCESS"
+            }
+        ]
+    elif stage_code == "AML":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "INITIATING AML/KYC COMPLIANCE CHECK",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "SANCTIONS SCREENING: CLEAR",
+                "level": "SUCCESS"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "KYC VERIFICATION: PASSED",
+                "level": "SUCCESS"
+            }
+        ]
+    elif stage_code == "AUTH":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "AUTHORIZATION REQUIRED - AWAITING APPROVAL",
+                "level": "WARNING"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"AUTHORIZATION LEVEL: {transfer.transfer_type} HIGH VALUE",
+                "level": "INFO"
+            }
+        ]
+    elif stage_code == "PROC":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "PROCESSING TRANSFER FOR NETWORK TRANSMISSION",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"GENERATING SWIFT MT{transfer.transfer_type[-2:]} MESSAGE",
+                "level": "INFO"
+            }
+        ]
+    elif stage_code == "NET":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "TRANSMITTING VIA SWIFT NETWORK",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "MESSAGE ROUTING: IN PROGRESS",
+                "level": "INFO"
+            }
+        ]
+    elif stage_code == "INT":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "PROCESSING AT INTERMEDIARY BANK",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "CORRESPONDENT BANK VERIFICATION: PASSED",
+                "level": "SUCCESS"
+            }
+        ]
+    elif stage_code == "SETT":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "FINAL SETTLEMENT IN PROGRESS",
+                "level": "INFO"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"CREDITING ACCOUNT: {transfer.receiver_name}",
+                "level": "INFO"
+            }
+        ]
+    elif stage_code == "COMP":
+        logs = [
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": "TRANSFER COMPLETED SUCCESSFULLY",
+                "level": "SUCCESS"
+            },
+            {
+                "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "message": f"FINAL STATUS: CREDITED {transfer.currency} {transfer.amount:,.2f}",
+                "level": "SUCCESS"
+            }
+        ]
+    
+    return logs
+
+def initialize_transfer_stages(transfer: Transfer) -> List[TransferStage]:
+    """Initialize all transfer stages"""
+    stages = []
+    stage_definitions = get_transfer_stages()
+    current_time = datetime.now(timezone.utc)
+    
+    for i, stage_def in enumerate(stage_definitions):
+        stage_status = "completed" if i == 0 else "pending"
+        stage_logs = generate_stage_logs(stage_def, transfer) if i == 0 else []
+        
+        stage = TransferStage(
+            stage_name=stage_def["stage_name"],
+            stage_code=stage_def["stage_code"],
+            location=stage_def["location"],
+            timestamp=current_time if i == 0 else current_time,
+            status=stage_status,
+            description=stage_def["description"],
+            logs=stage_logs
+        )
+        stages.append(stage)
+    
+    return stages
+
+def generate_swift_logs(transfer: Transfer) -> List[dict]:
+    """Generate initial SWIFT terminal logs"""
+    current_time = datetime.now(timezone.utc)
+    logs = []
+    
+    # Add logs from completed stages
+    for stage in transfer.stages:
+        if stage.status == "completed":
+            logs.extend(stage.logs)
+    
     return logs
 
 # Initialize default admin user
