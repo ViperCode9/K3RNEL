@@ -300,17 +300,19 @@ function App() {
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <Label htmlFor="transfer_type" className="text-slate-300">Transfer Type</Label>
-                        <Select value={transferForm.transfer_type} onValueChange={(value) => setTransferForm({ ...transferForm, transfer_type: value })}>
-                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                            <SelectValue placeholder="Select type" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-slate-700 border-slate-600">
-                            <SelectItem value="M0">M0</SelectItem>
-                            <SelectItem value="M1">M1</SelectItem>
-                            <SelectItem value="SWIFT-MT">SWIFT-MT</SelectItem>
-                            <SelectItem value="SWIFT-MX">SWIFT-MX</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <select
+                          id="transfer_type"
+                          value={transferForm.transfer_type}
+                          onChange={(e) => setTransferForm({ ...transferForm, transfer_type: e.target.value })}
+                          className="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                          required
+                        >
+                          <option value="">Select type</option>
+                          <option value="M0">M0</option>
+                          <option value="M1">M1</option>
+                          <option value="SWIFT-MT">SWIFT-MT</option>
+                          <option value="SWIFT-MX">SWIFT-MX</option>
+                        </select>
                       </div>
                       <div>
                         <Label htmlFor="amount" className="text-slate-300">Amount</Label>
