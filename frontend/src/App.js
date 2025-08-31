@@ -232,6 +232,59 @@ function App() {
     }
   };
 
+  const processBulkAction = async (action) => {
+    if (selectedTransfers.length === 0) {
+      alert('Please select transfers to process');
+      return;
+    }
+
+    const confirmed = window.confirm(`Are you sure you want to ${action} ${selectedTransfers.length} transfers?`);
+    if (!confirmed) return;
+
+    setIsLoading(true);
+    try {
+      const promises = selectedTransfers.map(transferId =>
+        axios.post(`${API}/transfers/action`, {
+          transfer_id: transferId,
+          action: action
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      );
+      
+      await Promise.all(promises);
+      setSelectedTransfers([]);
+      fetchTransfers();
+      alert(`Successfully ${action}ed ${selectedTransfers.length} transfers`);
+    } catch (error) {
+      alert(`Bulk action failed: ${error.response?.data?.detail || 'Unknown error'}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const clearFilters = () => {
+    setDashboardFilters({
+      search: '',
+      status: 'all',
+      type: 'all',
+      dateFrom: null,
+      dateTo: null,
+      amountMin: '',
+      amountMax: ''
+    });
+  };
+
+  const getTransferStats = () => {
+    const stats = {
+      total: transfers.length,
+      pending: transfers.filter(t => t.status === 'pending').length,
+      completed: transfers.filter(t => t.status === 'completed').length,
+      totalAmount: transfers.reduce((sum, t) => sum + t.amount, 0)
+    };
+    return stats;
+  };
+
   const getStatusBadge = (status) => {
     const variants = {
       pending: 'outline',
