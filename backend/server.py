@@ -103,6 +103,10 @@ class BulkTransferAction(BaseModel):
     transfer_ids: List[str]
     notes: Optional[str] = None
 
+class StageAdvancement(BaseModel):
+    transfer_id: str
+    target_stage: Optional[str] = None  # If None, advance to next stage
+
 class ActionResponse(BaseModel):
     action: str
     transfer_id: str
