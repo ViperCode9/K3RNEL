@@ -1,4 +1,5 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,10 +7,11 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 import uuid
-from datetime import datetime
-
+from datetime import datetime, timezone
+import jwt
+import hashlib
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -20,37 +22,283 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(title="K3RN3L 808 Banking Simulation")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# JWT Configuration
+SECRET_KEY = "K3RN3L808_SECRET_KEY_FOR_SIMULATION"
+ALGORITHM = "HS256"
+security = HTTPBearer()
 
 # Define Models
-class StatusCheck(BaseModel):
+class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    username: str
+    full_name: str
+    role: str  # admin, officer, customer
+    email: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    full_name: str
+    role: str
+    email: str
 
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.dict()
-    status_obj = StatusCheck(**status_dict)
-    _ = await db.status_checks.insert_one(status_obj.dict())
-    return status_obj
+class Transfer(BaseModel):
+    transfer_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    sender_name: str
+    sender_bic: str
+    receiver_name: str
+    receiver_bic: str
+    transfer_type: str  # M0, M1, SWIFT-MT, SWIFT-MX
+    amount: float
+    currency: str
+    reference: str
+    purpose: str
+    status: str = "pending"  # pending, processing, in_transit, completed, rejected, held
+    created_by: str
+    swift_logs: List[dict] = Field(default_factory=list)
+    current_stage: str = "queued"
+    location: str = "sending_bank"
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    status_checks = await db.status_checks.find().to_list(1000)
-    return [StatusCheck(**status_check) for status_check in status_checks]
+class TransferCreate(BaseModel):
+    sender_name: str
+    sender_bic: str
+    receiver_name: str
+    receiver_bic: str
+    transfer_type: str
+    amount: float
+    currency: str
+    reference: str
+    purpose: str
+
+class TransferAction(BaseModel):
+    action: str  # approve, hold, reject
+    transfer_id: str
+    notes: Optional[str] = None
+
+class ActionResponse(BaseModel):
+    action: str
+    transfer_id: str
+    status: str
+    message: str
+    error_code: Optional[str] = None
+
+# Helper Functions
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password: str, hashed: str) -> bool:
+    return hash_password(password) == hashed
+
+def create_access_token(user_data: dict) -> str:
+    return jwt.encode(user_data, SECRET_KEY, algorithm=ALGORITHM)
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+def generate_swift_logs(transfer: Transfer) -> List[dict]:
+    """Generate realistic SWIFT terminal logs"""
+    current_time = datetime.now(timezone.utc)
+    logs = [
+        {
+            "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"SWIFT NETWORK INITIATED - MSG TYPE: {transfer.transfer_type}",
+            "level": "INFO"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"SENDING BANK: {transfer.sender_bic}",
+            "level": "INFO"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"RECEIVING BANK: {transfer.receiver_bic}",
+            "level": "INFO"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"AMOUNT: {transfer.currency} {transfer.amount:,.2f}",
+            "level": "INFO"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"REFERENCE: {transfer.reference}",
+            "level": "INFO"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": "VALIDATION: PASSED - BIC CODES VERIFIED",
+            "level": "SUCCESS"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": "COMPLIANCE CHECK: PASSED - AML/KYC CLEARED",
+            "level": "SUCCESS"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": "PIPELINE: Initiated -> Processing -> Awaiting Approval",
+            "level": "INFO"
+        },
+        {
+            "timestamp": (current_time).strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"STATUS: {transfer.status.upper()}",
+            "level": "WARNING" if transfer.status == "pending" else "SUCCESS"
+        }
+    ]
+    return logs
+
+# Initialize default admin user
+async def init_default_admin():
+    existing_admin = await db.users.find_one({"username": "kompx3"})
+    if not existing_admin:
+        admin_user = {
+            "id": str(uuid.uuid4()),
+            "username": "kompx3",
+            "password": hash_password("K3RN3L808"),
+            "full_name": "System Administrator",
+            "role": "admin",
+            "email": "admin@kernel808.sim",
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.users.insert_one(admin_user)
+
+# Authentication Routes
+@api_router.post("/auth/login")
+async def login(user_data: UserLogin):
+    user = await db.users.find_one({"username": user_data.username})
+    if not user or not verify_password(user_data.password, user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    token_data = {
+        "user_id": user["id"],
+        "username": user["username"],
+        "role": user["role"]
+    }
+    token = create_access_token(token_data)
+    
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user["id"],
+            "username": user["username"],
+            "full_name": user["full_name"],
+            "role": user["role"]
+        }
+    }
+
+@api_router.post("/users", response_model=User)
+async def create_user(user_data: UserCreate, current_user: dict = Depends(verify_token)):
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can create users")
+    
+    # Check if username already exists
+    existing_user = await db.users.find_one({"username": user_data.username})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    
+    user_dict = user_data.dict()
+    user_dict["password"] = hash_password(user_dict["password"])
+    user_dict["id"] = str(uuid.uuid4())
+    user_dict["created_at"] = datetime.now(timezone.utc).isoformat()
+    
+    await db.users.insert_one(user_dict)
+    
+    # Return user without password
+    del user_dict["password"]
+    return User(**user_dict)
+
+# Transfer Routes
+@api_router.post("/transfers", response_model=Transfer)
+async def create_transfer(transfer_data: TransferCreate, current_user: dict = Depends(verify_token)):
+    transfer_dict = transfer_data.dict()
+    transfer_dict["transfer_id"] = str(uuid.uuid4())
+    transfer_dict["date"] = datetime.now(timezone.utc).isoformat()
+    transfer_dict["status"] = "pending"
+    transfer_dict["created_by"] = current_user["user_id"]
+    transfer_dict["current_stage"] = "queued"
+    transfer_dict["location"] = "sending_bank"
+    
+    # Create transfer object to generate logs
+    transfer_obj = Transfer(**transfer_dict)
+    transfer_dict["swift_logs"] = generate_swift_logs(transfer_obj)
+    
+    await db.transfers.insert_one(transfer_dict)
+    return Transfer(**transfer_dict)
+
+@api_router.get("/transfers", response_model=List[Transfer])
+async def get_transfers(current_user: dict = Depends(verify_token)):
+    transfers = await db.transfers.find().sort("date", -1).to_list(1000)
+    return [Transfer(**transfer) for transfer in transfers]
+
+@api_router.get("/transfers/{transfer_id}", response_model=Transfer)
+async def get_transfer(transfer_id: str, current_user: dict = Depends(verify_token)):
+    transfer = await db.transfers.find_one({"transfer_id": transfer_id})
+    if not transfer:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    return Transfer(**transfer)
+
+@api_router.post("/transfers/action", response_model=ActionResponse)
+async def process_transfer_action(action_data: TransferAction, current_user: dict = Depends(verify_token)):
+    if current_user["role"] not in ["admin", "officer"]:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    
+    transfer = await db.transfers.find_one({"transfer_id": action_data.transfer_id})
+    if not transfer:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    
+    # Update transfer status based on action
+    new_status = "completed" if action_data.action == "approve" else action_data.action + "ed"
+    current_time = datetime.now(timezone.utc)
+    
+    # Add action log to SWIFT logs
+    new_log = {
+        "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+        "message": f"ACTION: {action_data.action.upper()} by {current_user['username']}",
+        "level": "SUCCESS" if action_data.action == "approve" else "WARNING"
+    }
+    
+    if action_data.action == "approve":
+        new_log_complete = {
+            "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "message": "PIPELINE: Processing -> In Transit -> Completed",
+            "level": "SUCCESS"
+        }
+        transfer["swift_logs"].extend([new_log, new_log_complete])
+        transfer["current_stage"] = "completed"
+        transfer["location"] = "receiving_bank"
+    else:
+        transfer["swift_logs"].append(new_log)
+    
+    transfer["status"] = new_status
+    
+    await db.transfers.update_one(
+        {"transfer_id": action_data.transfer_id},
+        {"$set": {"status": new_status, "swift_logs": transfer["swift_logs"], 
+                 "current_stage": transfer["current_stage"], "location": transfer["location"]}}
+    )
+    
+    return ActionResponse(
+        action=action_data.action,
+        transfer_id=action_data.transfer_id,
+        status="success",
+        message=f"Transfer {action_data.action}d successfully"
+    )
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -69,6 +317,11 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup_event():
+    await init_default_admin()
+    logger.info("K3RN3L 808 Banking Simulation System Started")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
