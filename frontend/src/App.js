@@ -596,52 +596,453 @@ function App() {
           </TabsContent>
 
           <TabsContent value="dashboard" className="space-y-6">
+            {/* Dashboard Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-400">Total Transfers</p>
+                      <p className="text-2xl font-bold text-white">{getTransferStats().total}</p>
+                    </div>
+                    <Activity className="h-8 w-8 text-blue-400" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-400">Pending</p>
+                      <p className="text-2xl font-bold text-yellow-400">{getTransferStats().pending}</p>
+                    </div>
+                    <Clock className="h-8 w-8 text-yellow-400" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-400">Completed</p>
+                      <p className="text-2xl font-bold text-green-400">{getTransferStats().completed}</p>
+                    </div>
+                    <CheckCircle className="h-8 w-8 text-green-400" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-400">Total Volume</p>
+                      <p className="text-2xl font-bold text-white">
+                        ${getTransferStats().totalAmount.toLocaleString()}
+                      </p>
+                    </div>
+                    <DollarSign className="h-8 w-8 text-green-400" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Dashboard Controls */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle>Transfer Dashboard</CardTitle>
-                <CardDescription className="text-slate-400">
-                  Manage and monitor all transfers
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {transfers.map((transfer) => (
-                    <Card
-                      key={transfer.transfer_id}
-                      className="bg-slate-700/50 border-slate-600 cursor-pointer hover:bg-slate-700/70 transition-colors"
-                      onClick={() => setSelectedTransfer(transfer)}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center">
+                      <TrendingUp className="h-5 w-5 mr-2 text-green-400" />
+                      Transfer Management Dashboard
+                    </CardTitle>
+                    <CardDescription className="text-slate-400">
+                      Advanced filtering and bulk operations
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={fetchTransfers}
+                      disabled={isLoading}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
+                      <RefreshCw className={`h-4 w-4 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowFilters(!showFilters)}
+                    >
+                      <Filter className="h-4 w-4 mr-1" />
+                      Filters
+                      <ChevronDown className={`h-4 w-4 ml-1 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              
+              <CardContent>
+                {/* Search and Quick Filters */}
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                    <Input
+                      placeholder="Search transfers by name, BIC, reference..."
+                      value={dashboardFilters.search}
+                      onChange={(e) => setDashboardFilters({...dashboardFilters, search: e.target.value})}
+                      className="pl-10 bg-slate-700 border-slate-600 text-white"
+                    />
+                  </div>
+                  
+                  <select
+                    value={dashboardFilters.status}
+                    onChange={(e) => setDashboardFilters({...dashboardFilters, status: e.target.value})}
+                    className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="held">Held</option>
+                  </select>
+                  
+                  <select
+                    value={dashboardFilters.type}
+                    onChange={(e) => setDashboardFilters({...dashboardFilters, type: e.target.value})}
+                    className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="M0">M0</option>
+                    <option value="M1">M1</option>
+                    <option value="SWIFT-MT">SWIFT-MT</option>
+                    <option value="SWIFT-MX">SWIFT-MX</option>
+                  </select>
+                </div>
+
+                {/* Advanced Filters */}
+                {showFilters && (
+                  <div className="mb-4 p-4 bg-slate-700/30 rounded-lg border border-slate-600">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <Label className="text-slate-300 text-sm">Amount Min</Label>
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          value={dashboardFilters.amountMin}
+                          onChange={(e) => setDashboardFilters({...dashboardFilters, amountMin: e.target.value})}
+                          className="bg-slate-700 border-slate-600 text-white"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-slate-300 text-sm">Amount Max</Label>
+                        <Input
+                          type="number"
+                          placeholder="999999999"
+                          value={dashboardFilters.amountMax}
+                          onChange={(e) => setDashboardFilters({...dashboardFilters, amountMax: e.target.value})}
+                          className="bg-slate-700 border-slate-600 text-white"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-slate-300 text-sm">Date From</Label>
+                        <Input
+                          type="date"
+                          value={dashboardFilters.dateFrom ? dashboardFilters.dateFrom.toISOString().split('T')[0] : ''}
+                          onChange={(e) => setDashboardFilters({...dashboardFilters, dateFrom: e.target.value ? new Date(e.target.value) : null})}
+                          className="bg-slate-700 border-slate-600 text-white"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-slate-300 text-sm">Date To</Label>
+                        <Input
+                          type="date"
+                          value={dashboardFilters.dateTo ? dashboardFilters.dateTo.toISOString().split('T')[0] : ''}
+                          onChange={(e) => setDashboardFilters({...dashboardFilters, dateTo: e.target.value ? new Date(e.target.value) : null})}
+                          className="bg-slate-700 border-slate-600 text-white"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4 flex justify-end">
+                      <Button variant="outline" size="sm" onClick={clearFilters}>
+                        Clear All Filters
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Bulk Actions */}
+                {selectedTransfers.length > 0 && (user?.role === 'admin' || user?.role === 'officer') && (
+                  <div className="mb-4 p-3 bg-green-900/20 border border-green-700 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <span className="text-green-400">
+                        {selectedTransfers.length} transfers selected
+                      </span>
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          onClick={() => processBulkAction('approve')}
+                          className="bg-green-600 hover:bg-green-700"
+                          disabled={isLoading}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Bulk Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => processBulkAction('hold')}
+                          disabled={isLoading}
+                        >
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          Bulk Hold
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => processBulkAction('reject')}
+                          disabled={isLoading}
+                        >
+                          <XCircle className="h-4 w-4 mr-1" />
+                          Bulk Reject
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setSelectedTransfers([])}
+                        >
+                          Clear Selection
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Transfers Table */}
+                <div className="border border-slate-600 rounded-lg overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/50">
+                        {(user?.role === 'admin' || user?.role === 'officer') && (
+                          <TableHead className="w-12">
+                            <Checkbox
+                              checked={selectedTransfers.length === filteredTransfers.length && filteredTransfers.length > 0}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedTransfers(filteredTransfers.map(t => t.transfer_id));
+                                } else {
+                                  setSelectedTransfers([]);
+                                }
+                              }}
+                              className="border-slate-400"
+                            />
+                          </TableHead>
+                        )}
+                        <TableHead className="text-slate-300">Transfer ID</TableHead>
+                        <TableHead className="text-slate-300">Sender</TableHead>
+                        <TableHead className="text-slate-300">Receiver</TableHead>
+                        <TableHead className="text-slate-300">Type</TableHead>
+                        <TableHead className="text-slate-300">Amount</TableHead>
+                        <TableHead className="text-slate-300">Status</TableHead>
+                        <TableHead className="text-slate-300">Date</TableHead>
+                        <TableHead className="text-slate-300">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredTransfers.map((transfer) => (
+                        <TableRow 
+                          key={transfer.transfer_id} 
+                          className="border-slate-600 hover:bg-slate-700/30"
+                        >
+                          {(user?.role === 'admin' || user?.role === 'officer') && (
+                            <TableCell>
+                              <Checkbox
+                                checked={selectedTransfers.includes(transfer.transfer_id)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setSelectedTransfers([...selectedTransfers, transfer.transfer_id]);
+                                  } else {
+                                    setSelectedTransfers(selectedTransfers.filter(id => id !== transfer.transfer_id));
+                                  }
+                                }}
+                                className="border-slate-400"
+                              />
+                            </TableCell>
+                          )}
+                          <TableCell className="text-white font-mono text-xs">
+                            {transfer.transfer_id.substring(0, 8)}...
+                          </TableCell>
+                          <TableCell className="text-white">
                             <div>
-                              <div className="font-medium text-white">
-                                {transfer.sender_name} → {transfer.receiver_name}
-                              </div>
-                              <div className="text-sm text-slate-400">
-                                {transfer.sender_bic} → {transfer.receiver_bic}
-                              </div>
+                              <div className="font-medium">{transfer.sender_name}</div>
+                              <div className="text-xs text-slate-400">{transfer.sender_bic}</div>
                             </div>
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            <div className="text-right">
-                              <div className="font-medium text-white">
-                                {transfer.currency} {transfer.amount.toLocaleString()}
-                              </div>
-                              <div className="text-sm text-slate-400">
-                                {transfer.transfer_type}
-                              </div>
+                          </TableCell>
+                          <TableCell className="text-white">
+                            <div>
+                              <div className="font-medium">{transfer.receiver_name}</div>
+                              <div className="text-xs text-slate-400">{transfer.receiver_bic}</div>
                             </div>
+                          </TableCell>
+                          <TableCell className="text-white">
+                            <Badge variant="outline" className="text-xs">
+                              {transfer.transfer_type}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-white font-medium">
+                            {transfer.currency} {transfer.amount.toLocaleString()}
+                          </TableCell>
+                          <TableCell>
                             {getStatusBadge(transfer.status)}
-                            <div className="text-xs text-slate-400">
-                              <Clock className="h-3 w-3 inline mr-1" />
-                              {new Date(transfer.date).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell className="text-slate-400 text-sm">
+                            {new Date(transfer.date).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-1">
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => setSelectedTransfer(transfer)}
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl bg-slate-800 border-slate-700">
+                                  <DialogHeader>
+                                    <DialogTitle className="text-white flex items-center">
+                                      <Terminal className="h-5 w-5 mr-2 text-green-400" />
+                                      Transfer Details - {transfer.transfer_id}
+                                    </DialogTitle>
+                                    <DialogDescription className="text-slate-400">
+                                      Complete transfer information and SWIFT logs
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  
+                                  <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                      <div>
+                                        <Label className="text-slate-300">Transfer Information</Label>
+                                        <div className="mt-2 space-y-2 text-sm">
+                                          <div className="flex justify-between">
+                                            <span className="text-slate-400">Amount:</span>
+                                            <span className="text-white font-medium">
+                                              {transfer.currency} {transfer.amount.toLocaleString()}
+                                            </span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                            <span className="text-slate-400">Type:</span>
+                                            <span className="text-white">{transfer.transfer_type}</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                            <span className="text-slate-400">Reference:</span>
+                                            <span className="text-white font-mono">{transfer.reference}</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                            <span className="text-slate-400">Status:</span>
+                                            {getStatusBadge(transfer.status)}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                      {(user?.role === 'admin' || user?.role === 'officer') && transfer.status === 'pending' && (
+                                        <div className="flex space-x-2">
+                                          <Button
+                                            onClick={() => processAction(transfer.transfer_id, 'approve')}
+                                            className="bg-green-600 hover:bg-green-700"
+                                            size="sm"
+                                          >
+                                            <CheckCircle className="h-4 w-4 mr-1" />
+                                            Approve
+                                          </Button>
+                                          <Button
+                                            onClick={() => processAction(transfer.transfer_id, 'hold')}
+                                            variant="outline"
+                                            size="sm"
+                                          >
+                                            <AlertCircle className="h-4 w-4 mr-1" />
+                                            Hold
+                                          </Button>
+                                          <Button
+                                            onClick={() => processAction(transfer.transfer_id, 'reject')}
+                                            variant="destructive"
+                                            size="sm"
+                                          >
+                                            <XCircle className="h-4 w-4 mr-1" />
+                                            Reject
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    <div>
+                                      <Label className="text-slate-300">SWIFT Terminal Logs</Label>
+                                      <ScrollArea className="h-64 w-full rounded-md border border-green-500/30 p-4 bg-black/50 mt-2">
+                                        <div className="font-mono text-sm space-y-1">
+                                          {transfer.swift_logs?.map((log, index) => (
+                                            <div
+                                              key={index}
+                                              className={`flex items-start space-x-2 ${getLogLevelColor(log.level)}`}
+                                            >
+                                              <span className="text-green-400 text-xs w-20 flex-shrink-0">
+                                                [{log.timestamp.split(' ')[1]}]
+                                              </span>
+                                              <span className="flex-1">{log.message}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </ScrollArea>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                              
+                              {(user?.role === 'admin' || user?.role === 'officer') && transfer.status === 'pending' && (
+                                <div className="flex space-x-1">
+                                  <Button
+                                    onClick={() => processAction(transfer.transfer_id, 'approve')}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-green-400 hover:text-green-300"
+                                  >
+                                    <CheckCircle className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    onClick={() => processAction(transfer.transfer_id, 'reject')}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-red-400 hover:text-red-300"
+                                  >
+                                    <XCircle className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              )}
                             </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  
+                  {filteredTransfers.length === 0 && (
+                    <div className="p-8 text-center text-slate-400">
+                      <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No transfers found matching your criteria</p>
+                      <Button 
+                        variant="link" 
+                        className="text-green-400 mt-2"
+                        onClick={clearFilters}
+                      >
+                        Clear filters to see all transfers
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
