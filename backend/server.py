@@ -613,6 +613,80 @@ async def process_bulk_transfer_action(action_data: BulkTransferAction, current_
         "message": f"Bulk {action_data.action} completed: {successful_count}/{len(action_data.transfer_ids)} successful"
     }
 
+@api_router.post("/transfers/advance-stage")
+async def advance_transfer_stage(stage_data: StageAdvancement, current_user: dict = Depends(verify_token)):
+    if current_user["role"] not in ["admin", "officer"]:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    
+    transfer = await db.transfers.find_one({"transfer_id": stage_data.transfer_id})
+    if not transfer:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    
+    transfer_obj = Transfer(**transfer)
+    current_stage_idx = transfer_obj.current_stage_index
+    
+    # Check if we can advance
+    if current_stage_idx >= len(transfer_obj.stages) - 1:
+        raise HTTPException(status_code=400, detail="Transfer is already at final stage")
+    
+    # Advance to next stage
+    next_stage_idx = current_stage_idx + 1
+    next_stage = transfer_obj.stages[next_stage_idx]
+    
+    # Update the stage
+    current_time = datetime.now(timezone.utc)
+    transfer_obj.stages[next_stage_idx].status = "completed"
+    transfer_obj.stages[next_stage_idx].timestamp = current_time
+    transfer_obj.stages[next_stage_idx].logs = generate_stage_logs(
+        {
+            "stage_code": next_stage.stage_code,
+            "stage_name": next_stage.stage_name,
+            "location": next_stage.location,
+            "description": next_stage.description
+        },
+        transfer_obj
+    )
+    
+    # Update transfer status
+    transfer_obj.current_stage_index = next_stage_idx
+    transfer_obj.current_stage = next_stage.stage_name.lower().replace(" ", "_")
+    transfer_obj.location = next_stage.location
+    
+    # Update overall status based on stage
+    if next_stage.stage_code == "AUTH":
+        transfer_obj.status = "pending"
+    elif next_stage.stage_code in ["PROC", "NET", "INT"]:
+        transfer_obj.status = "processing"
+    elif next_stage.stage_code == "SETT":
+        transfer_obj.status = "in_transit"
+    elif next_stage.stage_code == "COMP":
+        transfer_obj.status = "completed"
+    
+    # Regenerate SWIFT logs
+    transfer_obj.swift_logs = generate_swift_logs(transfer_obj)
+    
+    # Add stage advancement log
+    stage_log = {
+        "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+        "message": f"STAGE ADVANCED: {next_stage.stage_name.upper()} by {current_user['username']}",
+        "level": "INFO"
+    }
+    transfer_obj.swift_logs.append(stage_log)
+    
+    # Update in database
+    await db.transfers.update_one(
+        {"transfer_id": stage_data.transfer_id},
+        {"$set": transfer_obj.dict()}
+    )
+    
+    return {
+        "transfer_id": stage_data.transfer_id,
+        "previous_stage": transfer_obj.stages[current_stage_idx].stage_name,
+        "current_stage": next_stage.stage_name,
+        "status": "success",
+        "message": f"Transfer advanced to {next_stage.stage_name}"
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
