@@ -52,6 +52,15 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
+class TransferStage(BaseModel):
+    stage_name: str
+    stage_code: str
+    location: str
+    timestamp: datetime
+    status: str  # completed, in_progress, pending, failed
+    description: str
+    logs: List[dict] = Field(default_factory=list)
+
 class Transfer(BaseModel):
     transfer_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -67,8 +76,11 @@ class Transfer(BaseModel):
     status: str = "pending"  # pending, processing, in_transit, completed, rejected, held
     created_by: str
     swift_logs: List[dict] = Field(default_factory=list)
-    current_stage: str = "queued"
+    current_stage: str = "initiated"
+    current_stage_index: int = 0
     location: str = "sending_bank"
+    stages: List[TransferStage] = Field(default_factory=list)
+    estimated_completion: Optional[datetime] = None
 
 class TransferCreate(BaseModel):
     sender_name: str
