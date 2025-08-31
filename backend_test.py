@@ -187,6 +187,73 @@ class K3RN3LBankingAPITester:
             return True
         return False
 
+    def test_transfer_stats(self):
+        """Test getting transfer statistics"""
+        success, response = self.run_test(
+            "Get Transfer Stats",
+            "GET",
+            "transfers/stats",
+            200
+        )
+        
+        if success and 'total_transfers' in response:
+            print(f"   ✅ Total transfers: {response.get('total_transfers')}")
+            print(f"   ✅ Total amount: ${response.get('total_amount', 0):,.2f}")
+            print(f"   ✅ Pending: {response.get('pending', 0)}")
+            print(f"   ✅ Completed: {response.get('completed', 0)}")
+            return True
+        return False
+
+    def test_bulk_transfer_action(self, transfer_ids, action="approve"):
+        """Test bulk transfer actions"""
+        if not transfer_ids or len(transfer_ids) == 0:
+            print("❌ No transfer IDs provided for bulk action")
+            return False
+            
+        bulk_data = {
+            "transfer_ids": transfer_ids,
+            "action": action
+        }
+        
+        success, response = self.run_test(
+            f"Bulk Transfer Action ({action})",
+            "POST",
+            "transfers/bulk-action",
+            200,
+            data=bulk_data
+        )
+        
+        if success and 'successful' in response:
+            print(f"   ✅ Bulk {action}: {response.get('successful')}/{response.get('total_requested')} successful")
+            return True
+        return False
+
+    def test_filtered_transfers(self):
+        """Test transfer filtering"""
+        # Test status filter
+        success, response = self.run_test(
+            "Get Transfers (Status Filter)",
+            "GET",
+            "transfers?status=pending",
+            200
+        )
+        
+        if success:
+            print(f"   ✅ Pending transfers: {len(response)}")
+        
+        # Test type filter
+        success2, response2 = self.run_test(
+            "Get Transfers (Type Filter)",
+            "GET",
+            "transfers?transfer_type=SWIFT-MT",
+            200
+        )
+        
+        if success2:
+            print(f"   ✅ SWIFT-MT transfers: {len(response2)}")
+            
+        return success and success2
+
     def test_unauthorized_access(self):
         """Test accessing protected endpoints without token"""
         # Temporarily remove token
