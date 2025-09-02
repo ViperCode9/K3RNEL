@@ -467,6 +467,10 @@ async def create_transfer(transfer_data: TransferCreate, current_user: dict = De
     transfer_dict["swift_logs"] = generate_swift_logs(transfer_obj)
     
     await db.transfers.insert_one(transfer_dict)
+    
+    # Start automated progression
+    asyncio.create_task(start_auto_progression_for_transfer(transfer_obj.transfer_id))
+    
     return Transfer(**transfer_dict)
 
 @api_router.get("/transfers", response_model=List[Transfer])
