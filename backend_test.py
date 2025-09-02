@@ -102,15 +102,15 @@ class K3RN3LBankingAPITester:
     def test_create_transfer(self):
         """Test creating a transfer with the specified test data"""
         transfer_data = {
-            "sender_name": "Chase Bank",
+            "sender_name": "JPMorgan Chase",
             "sender_bic": "CHASUS33XXX",
-            "receiver_name": "Deutsche Bank", 
-            "receiver_bic": "DEUTDEFFXXX",
+            "receiver_name": "HSBC Bank", 
+            "receiver_bic": "HBUKGB4BXXX",
             "transfer_type": "SWIFT-MT",
-            "amount": 50000,
+            "amount": 75000,
             "currency": "USD",
-            "reference": "REF789123456",
-            "purpose": "International trade payment for goods"
+            "reference": "TRK123456789",
+            "purpose": "Testing transfer tracking with detailed stages"
         }
         
         success, response = self.run_test(
