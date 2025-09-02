@@ -39,28 +39,64 @@ body {
     0 0 30px rgba(0, 255, 255, 0.4);
 }
 
+/* Cyber Terminal Window */
+.terminal-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85vw;
+  height: 70vh;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 
+    0 0 50px rgba(0, 255, 255, 0.3),
+    inset 0 0 50px rgba(0, 255, 255, 0.1),
+    0 25px 50px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: terminalGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes terminalGlow {
+  0% { 
+    box-shadow: 
+      0 0 50px rgba(0, 255, 255, 0.3),
+      inset 0 0 50px rgba(0, 255, 255, 0.1),
+      0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+  100% { 
+    box-shadow: 
+      0 0 70px rgba(0, 255, 255, 0.5),
+      inset 0 0 70px rgba(0, 255, 255, 0.2),
+      0 35px 70px rgba(0, 0, 0, 0.7);
+  }
+}
+
 /* Custom scrollbar for terminal */
 .scroll-area [data-radix-scroll-area-viewport] {
   scrollbar-width: thin;
-  scrollbar-color: #10b981 #1e293b;
+  scrollbar-color: #00ffff #000000;
 }
 
 .scroll-area [data-radix-scroll-area-viewport]::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .scroll-area [data-radix-scroll-area-viewport]::-webkit-scrollbar-track {
-  background: #1e293b;
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
 }
 
 .scroll-area [data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb {
-  background: #10b981;
-  border-radius: 3px;
+  background: linear-gradient(45deg, #00ffff, #00ff7f);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
 }
 
 .scroll-area [data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb:hover {
-  background: #059669;
+  background: linear-gradient(45deg, #00ff7f, #7f00ff);
 }
 
 /* Animation for terminal cursor */
