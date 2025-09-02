@@ -124,6 +124,9 @@ class K3RN3LBankingAPITester:
         if success and 'transfer_id' in response:
             print(f"   ✅ Transfer created with ID: {response['transfer_id']}")
             print(f"   ✅ Status: {response.get('status')}")
+            print(f"   ✅ Current stage: {response.get('current_stage')}")
+            print(f"   ✅ Current stage index: {response.get('current_stage_index')}")
+            print(f"   ✅ Stages count: {len(response.get('stages', []))}")
             print(f"   ✅ SWIFT logs count: {len(response.get('swift_logs', []))}")
             return response['transfer_id']
         return None
