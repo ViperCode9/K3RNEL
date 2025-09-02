@@ -416,15 +416,24 @@ function App() {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs defaultValue="simulation" className="space-y-6">
-          <TabsList className="bg-slate-800 border-slate-700">
-            <TabsTrigger value="simulation" className="data-[state=active]:bg-green-600">
-              Transfer Simulation
+          <TabsList className="bg-black/60 border-cyan-500/20">
+            <TabsTrigger 
+              value="simulation" 
+              className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400 font-mono text-cyan-500"
+            >
+              TRANSFER SIM
             </TabsTrigger>
-            <TabsTrigger value="dashboard" className="data-[state=active]:bg-green-600">
-              Dashboard
+            <TabsTrigger 
+              value="dashboard" 
+              className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400 font-mono text-cyan-500"
+            >
+              COMMAND CENTER
             </TabsTrigger>
-            <TabsTrigger value="tracker" className="data-[state=active]:bg-green-600">
-              Transfer Tracker
+            <TabsTrigger 
+              value="tracker" 
+              className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400 font-mono text-cyan-500"
+            >
+              NETWORK TRACE
             </TabsTrigger>
           </TabsList>
 
