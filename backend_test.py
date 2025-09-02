@@ -231,6 +231,81 @@ class K3RN3LBankingAPITester:
             return True
         return False
 
+    def test_advance_stage(self, transfer_id):
+        """Test advancing transfer to next stage"""
+        if not transfer_id:
+            print("❌ No transfer ID provided")
+            return False
+            
+        stage_data = {
+            "transfer_id": transfer_id
+        }
+        
+        success, response = self.run_test(
+            f"Advance Transfer Stage",
+            "POST",
+            "transfers/advance-stage",
+            200,
+            data=stage_data
+        )
+        
+        if success and response.get('status') == 'success':
+            print(f"   ✅ Stage advanced from '{response.get('previous_stage')}' to '{response.get('current_stage')}'")
+            return True
+        return False
+
+    def test_detailed_stage_system(self, transfer_id):
+        """Test the detailed stage system by checking transfer stages"""
+        if not transfer_id:
+            print("❌ No transfer ID provided")
+            return False
+            
+        success, response = self.run_test(
+            f"Get Transfer with Stages",
+            "GET",
+            f"transfers/{transfer_id}",
+            200
+        )
+        
+        if success and 'stages' in response:
+            stages = response['stages']
+            print(f"   ✅ Transfer has {len(stages)} stages")
+            
+            # Check expected stages
+            expected_stages = [
+                "Initiated", "Validation", "Compliance Check", "Authorization", 
+                "Processing", "Network Transmission", "Intermediary Bank", 
+                "Final Settlement", "Completed"
+            ]
+            
+            stage_names = [stage['stage_name'] for stage in stages]
+            print(f"   ✅ Stage names: {stage_names}")
+            
+            # Verify all expected stages are present
+            missing_stages = [stage for stage in expected_stages if stage not in stage_names]
+            if missing_stages:
+                print(f"   ❌ Missing stages: {missing_stages}")
+                return False
+            
+            # Check first stage is completed
+            if stages[0]['status'] == 'completed':
+                print(f"   ✅ First stage '{stages[0]['stage_name']}' is completed")
+            else:
+                print(f"   ❌ First stage should be completed, but status is: {stages[0]['status']}")
+                return False
+                
+            # Check stage logs
+            completed_stages = [stage for stage in stages if stage['status'] == 'completed']
+            for stage in completed_stages:
+                if stage['logs'] and len(stage['logs']) > 0:
+                    print(f"   ✅ Stage '{stage['stage_name']}' has {len(stage['logs'])} logs")
+                else:
+                    print(f"   ❌ Stage '{stage['stage_name']}' should have logs")
+                    return False
+            
+            return True
+        return False
+
     def test_filtered_transfers(self):
         """Test transfer filtering"""
         # Test status filter
