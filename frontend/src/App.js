@@ -1318,6 +1318,237 @@ function App() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="tracker" className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Navigation className="h-5 w-5 mr-2 text-green-400" />
+                  Transfer Tracker
+                </CardTitle>
+                <CardDescription className="text-slate-400">
+                  Track transfer progress through detailed stages
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {selectedTransfer ? (
+                  <div className="space-y-6">
+                    {/* Transfer Header */}
+                    <div className="bg-slate-700/30 rounded-lg p-4 border border-slate-600">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label className="text-slate-400 text-sm">Transfer ID</Label>
+                          <p className="font-mono text-white">{selectedTransfer.transfer_id}</p>
+                        </div>
+                        <div>
+                          <Label className="text-slate-400 text-sm">Amount</Label>
+                          <p className="text-white font-semibold">
+                            {selectedTransfer.currency} {selectedTransfer.amount.toLocaleString()}
+                          </p>
+                        </div>
+                        <div>
+                          <Label className="text-slate-400 text-sm">Status</Label>
+                          <div className="mt-1">{getStatusBadge(selectedTransfer.status)}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                          <Label className="text-slate-400 text-sm">From</Label>
+                          <p className="text-white">{selectedTransfer.sender_name}</p>
+                          <p className="text-slate-400 text-sm">{selectedTransfer.sender_bic}</p>
+                        </div>
+                        <div>
+                          <Label className="text-slate-400 text-sm">To</Label>
+                          <p className="text-white">{selectedTransfer.receiver_name}</p>
+                          <p className="text-slate-400 text-sm">{selectedTransfer.receiver_bic}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stage Progress Timeline */}
+                    <div className="bg-slate-700/30 rounded-lg p-6 border border-slate-600">
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <Clock3 className="h-5 w-5 mr-2 text-green-400" />
+                        Transfer Progress Timeline
+                      </h3>
+                      
+                      {selectedTransfer.stages && selectedTransfer.stages.length > 0 ? (
+                        <div className="relative space-y-6">
+                          {selectedTransfer.stages.map((stage, index) => {
+                            const isActive = index === selectedTransfer.current_stage_index;
+                            const isCompleted = stage.status === 'completed';
+                            
+                            return (
+                              <div key={index} className="relative flex items-start space-x-4">
+                                {/* Timeline Line */}
+                                {index < selectedTransfer.stages.length - 1 && (
+                                  <div className="absolute left-4 top-8 w-px h-16 bg-slate-600"></div>
+                                )}
+                                
+                                {/* Stage Icon */}
+                                <div className="flex-shrink-0 mt-1">
+                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+                                    isCompleted 
+                                      ? 'bg-green-600 border-green-600 text-white' 
+                                      : isActive 
+                                        ? 'bg-yellow-600 border-yellow-600 text-white animate-pulse'
+                                        : 'bg-slate-700 border-slate-600 text-slate-400'
+                                  }`}>
+                                    {isCompleted ? (
+                                      <CheckCircle2 className="h-4 w-4" />
+                                    ) : isActive ? (
+                                      <Clock3 className="h-4 w-4" />
+                                    ) : (
+                                      <div className="w-2 h-2 rounded-full bg-current" />
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Stage Content */}
+                                <div className="flex-1 min-w-0 pb-6">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <h4 className={`font-medium ${
+                                      isCompleted ? 'text-green-400' : isActive ? 'text-yellow-400' : 'text-slate-400'
+                                    }`}>
+                                      {stage.stage_name}
+                                    </h4>
+                                    
+                                    {/* Location Badge */}
+                                    <div className="flex items-center space-x-2">
+                                      <Badge variant="outline" className="text-xs">
+                                        {stage.location.replace('_', ' ').toUpperCase()}
+                                      </Badge>
+                                      {isCompleted && (
+                                        <span className="text-xs text-slate-400">
+                                          {new Date(stage.timestamp).toLocaleString()}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  
+                                  <p className="text-sm text-slate-400 mb-3">{stage.description}</p>
+                                  
+                                  {/* Stage Logs */}
+                                  {stage.logs && stage.logs.length > 0 && (
+                                    <div className="bg-black/50 rounded p-3 font-mono text-xs border border-green-500/30">
+                                      {stage.logs.map((log, logIndex) => (
+                                        <div key={logIndex} className={`${getLogLevelColor(log.level)} mb-1`}>
+                                          <span className="text-green-400">[{log.timestamp.split(' ')[1]}]</span> {log.message}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="text-slate-400 text-center py-8">
+                          <Navigation className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>No stage information available for this transfer</p>
+                        </div>
+                      )}
+                      
+                      {/* Stage Advancement Controls */}
+                      {(user?.role === 'admin' || user?.role === 'officer') && 
+                       selectedTransfer.current_stage_index < (selectedTransfer.stages?.length - 1 || 0) && (
+                        <div className="mt-6 pt-4 border-t border-slate-600">
+                          <Button
+                            onClick={() => advanceStage(selectedTransfer.transfer_id)}
+                            className="bg-blue-600 hover:bg-blue-700"
+                            disabled={isLoading}
+                          >
+                            <ArrowRight className="h-4 w-4 mr-2" />
+                            {isLoading ? 'Advancing...' : 'Advance to Next Stage'}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Transfer Location Map */}
+                    <div className="bg-slate-700/30 rounded-lg p-6 border border-slate-600">
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <MapPin className="h-5 w-5 mr-2 text-green-400" />
+                        Current Location & Route
+                      </h3>
+                      
+                      <div className="flex items-center justify-between bg-slate-800/50 rounded-lg p-4 overflow-x-auto">
+                        {/* Sending Bank */}
+                        <div className="text-center min-w-0 flex-shrink-0">
+                          <Building2 className={`h-8 w-8 mx-auto mb-2 ${
+                            selectedTransfer.location === 'sending_bank' ? 'text-green-400' : 'text-slate-500'
+                          }`} />
+                          <p className="text-sm text-slate-400">Sending Bank</p>
+                          <p className="text-xs text-white truncate">{selectedTransfer.sender_bic}</p>
+                        </div>
+                        
+                        <ArrowRight className="text-slate-500 mx-2 flex-shrink-0" />
+                        
+                        {/* SWIFT Network */}
+                        <div className="text-center min-w-0 flex-shrink-0">
+                          <Globe className={`h-8 w-8 mx-auto mb-2 ${
+                            selectedTransfer.location === 'swift_network' ? 'text-green-400' : 'text-slate-500'
+                          }`} />
+                          <p className="text-sm text-slate-400">SWIFT Network</p>
+                          <p className="text-xs text-white">In Transit</p>
+                        </div>
+                        
+                        <ArrowRight className="text-slate-500 mx-2 flex-shrink-0" />
+                        
+                        {/* Intermediary Bank */}
+                        <div className="text-center min-w-0 flex-shrink-0">
+                          <Truck className={`h-8 w-8 mx-auto mb-2 ${
+                            selectedTransfer.location === 'intermediary_bank' ? 'text-green-400' : 'text-slate-500'
+                          }`} />
+                          <p className="text-sm text-slate-400">Intermediary</p>
+                          <p className="text-xs text-white">Correspondent</p>
+                        </div>
+                        
+                        <ArrowRight className="text-slate-500 mx-2 flex-shrink-0" />
+                        
+                        {/* Receiving Bank */}
+                        <div className="text-center min-w-0 flex-shrink-0">
+                          <Building2 className={`h-8 w-8 mx-auto mb-2 ${
+                            selectedTransfer.location === 'receiving_bank' ? 'text-green-400' : 'text-slate-500'
+                          }`} />
+                          <p className="text-sm text-slate-400">Receiving Bank</p>
+                          <p className="text-xs text-white truncate">{selectedTransfer.receiver_bic}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 text-sm text-slate-400 space-y-1">
+                        <p><strong>Current Location:</strong> {selectedTransfer.location?.replace('_', ' ').toUpperCase()}</p>
+                        <p><strong>Current Stage:</strong> {selectedTransfer.current_stage?.replace('_', ' ').toUpperCase()}</p>
+                        {selectedTransfer.estimated_completion && (
+                          <p><strong>Estimated Completion:</strong> {new Date(selectedTransfer.estimated_completion).toLocaleString()}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Navigation className="h-16 w-16 mx-auto mb-4 text-slate-500 opacity-50" />
+                    <h3 className="text-lg font-medium text-slate-400 mb-2">Select a Transfer to Track</h3>
+                    <p className="text-slate-500 mb-4">Choose a transfer from the dashboard to view detailed stage tracking</p>
+                    <Button 
+                      onClick={() => {
+                        // Auto-select the first pending transfer if available
+                        const pendingTransfer = transfers.find(t => t.status !== 'completed');
+                        if (pendingTransfer) {
+                          setSelectedTransfer(pendingTransfer);
+                        }
+                      }}
+                      variant="outline"
+                    >
+                      Select Transfer
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
