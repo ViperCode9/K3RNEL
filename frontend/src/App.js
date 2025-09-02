@@ -217,6 +217,10 @@ function App() {
         reference: '',
         purpose: ''
       });
+      
+      // Show terminal popup for the new transfer
+      setTerminalTransfer(response.data);
+      setShowTerminalPopup(true);
     } catch (error) {
       alert('Transfer creation failed: ' + (error.response?.data?.detail || 'Unknown error'));
     }
