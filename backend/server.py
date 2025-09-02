@@ -459,10 +459,9 @@ async def create_transfer(transfer_data: TransferCreate, current_user: dict = De
     transfer_obj = Transfer(**transfer_dict)
     transfer_obj.stages = initialize_transfer_stages(transfer_obj)
     
-    # Set estimated completion (2-5 hours from now for simulation)
-    import random
-    hours_to_complete = random.randint(2, 5)
-    transfer_obj.estimated_completion = datetime.now(timezone.utc) + timedelta(hours=hours_to_complete)
+    # Calculate realistic completion time based on stage timings
+    total_time = sum(STAGE_TIMINGS.values())
+    transfer_obj.estimated_completion = datetime.now(timezone.utc) + timedelta(seconds=total_time)
     
     transfer_dict = transfer_obj.dict()
     transfer_dict["swift_logs"] = generate_swift_logs(transfer_obj)
