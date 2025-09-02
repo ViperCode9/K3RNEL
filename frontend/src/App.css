@@ -16,11 +16,27 @@ body {
 
 .App {
   min-height: 100vh;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 255, 127, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(127, 0, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
 }
 
-/* Terminal styling */
+/* Cyber Terminal styling */
 .font-mono {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+.cyber-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.8),
+    0 0 20px rgba(0, 255, 255, 0.6),
+    0 0 30px rgba(0, 255, 255, 0.4);
 }
 
 /* Custom scrollbar for terminal */
