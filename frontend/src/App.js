@@ -294,6 +294,32 @@ function App() {
     return stats;
   };
 
+  const advanceStage = async (transferId) => {
+    if (!transferId) return;
+    
+    setIsLoading(true);
+    try {
+      await axios.post(`${API}/transfers/advance-stage`, {
+        transfer_id: transferId
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Refresh transfers and update selected transfer
+      fetchTransfers();
+      const updated = await axios.get(`${API}/transfers/${transferId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSelectedTransfer(updated.data);
+      
+      alert('Transfer stage advanced successfully');
+    } catch (error) {
+      alert(`Stage advancement failed: ${error.response?.data?.detail || 'Unknown error'}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getStatusBadge = (status) => {
     const variants = {
       pending: 'outline',
