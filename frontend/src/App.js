@@ -1571,6 +1571,96 @@ function App() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Cyber Terminal Popup */}
+      {showTerminalPopup && terminalTransfer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="terminal-window">
+            <div className="flex items-center justify-between p-4 border-b border-cyan-500/20">
+              <div className="flex items-center">
+                <Terminal className="h-5 w-5 text-cyan-400 mr-2" />
+                <h3 className="cyber-title text-cyan-400 text-lg">SWIFT NETWORK TERMINAL</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowTerminalPopup(false)}
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+              >
+                <XCircle className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="p-6">
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="space-y-2">
+                  <Label className="text-cyan-400 font-mono text-sm">TRANSFER ID</Label>
+                  <p className="font-mono text-cyan-300 bg-black/50 p-2 rounded border border-cyan-500/20">
+                    {terminalTransfer.transfer_id}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-cyan-400 font-mono text-sm">NETWORK STATUS</Label>
+                  <div className="flex items-center">
+                    {getStatusBadge(terminalTransfer.status)}
+                    <span className="ml-2 text-cyan-300 font-mono text-sm">
+                      {terminalTransfer.currency} {terminalTransfer.amount.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="cyber-card p-4">
+                <Label className="text-cyan-400 font-mono text-sm mb-2 block">LIVE NETWORK LOGS</Label>
+                <ScrollArea className="h-64 w-full rounded-md border border-cyan-500/30 p-4 bg-black/70">
+                  <div className="font-mono text-sm space-y-1">
+                    <div className="text-cyan-400 mb-2 cyber-glitch">
+                      === K3RN3L 808 SECURE BANKING NETWORK ===
+                    </div>
+                    {terminalTransfer.swift_logs?.map((log, index) => (
+                      <div
+                        key={index}
+                        className={`flex items-start space-x-2 ${getLogLevelColor(log.level)}`}
+                      >
+                        <span className="text-cyan-400 text-xs w-20 flex-shrink-0">
+                          [{log.timestamp.split(' ')[1]}]
+                        </span>
+                        <span className="flex-1">{log.message}</span>
+                      </div>
+                    ))}
+                    <div className="text-cyan-400 mt-4 animate-pulse">
+                      ▋ AUTO-PROGRESSION ENABLED - REAL-TIME MONITORING
+                    </div>
+                  </div>
+                </ScrollArea>
+              </div>
+              
+              <div className="mt-6 flex justify-between items-center">
+                <div className="text-sm text-cyan-500 font-mono">
+                  AUTO-STAGE PROGRESSION: ACTIVE
+                </div>
+                <div className="flex space-x-2">
+                  <Button
+                    onClick={() => setSelectedTransfer(terminalTransfer)}
+                    className="cyber-button"
+                    size="sm"
+                  >
+                    TRACK PROGRESS
+                  </Button>
+                  <Button
+                    onClick={() => setShowTerminalPopup(false)}
+                    variant="outline"
+                    size="sm"
+                    className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+                  >
+                    MINIMIZE
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
