@@ -404,13 +404,35 @@ def main():
     if not tester.test_filtered_transfers():
         print("❌ Filtered transfers failed")
     
-    # Test individual transfer action
-    if not tester.test_transfer_action(transfer_ids[0], "approve"):
-        print("❌ Transfer action failed")
+    print("\n📋 Running Stage System Tests...")
+    
+    # Test detailed stage system
+    if not tester.test_detailed_stage_system(transfer_ids[0]):
+        print("❌ Detailed stage system test failed")
+    
+    # Test stage advancement (advance a few stages)
+    print("\n📋 Testing Stage Advancement...")
+    for i in range(3):  # Advance 3 stages
+        if not tester.test_advance_stage(transfer_ids[0]):
+            print(f"❌ Stage advancement {i+1} failed")
+            break
+        else:
+            print(f"   ✅ Stage advancement {i+1} successful")
+    
+    # Check transfer after stage advancements
+    if not tester.test_detailed_stage_system(transfer_ids[0]):
+        print("❌ Stage system verification after advancement failed")
+    
+    print("\n📋 Running Transfer Action Tests...")
+    
+    # Test individual transfer action (use a different transfer)
+    if len(transfer_ids) > 1:
+        if not tester.test_transfer_action(transfer_ids[1], "approve"):
+            print("❌ Transfer action failed")
     
     # Test bulk transfer actions (use remaining transfers)
-    if len(transfer_ids) > 1:
-        if not tester.test_bulk_transfer_action(transfer_ids[1:], "hold"):
+    if len(transfer_ids) > 2:
+        if not tester.test_bulk_transfer_action(transfer_ids[2:], "hold"):
             print("❌ Bulk transfer action failed")
     
     # Print final results
