@@ -702,6 +702,137 @@ async def advance_transfer_stage(stage_data: StageAdvancement, current_user: dic
         "message": f"Transfer advanced to {next_stage.stage_name}"
     }
 
+# Automated Stage Progression System
+async def auto_advance_transfer_stage(transfer_id: str):
+    """Automatically advance transfer to next stage after timing delay"""
+    try:
+        transfer = await db.transfers.find_one({"transfer_id": transfer_id})
+        if not transfer or transfer.get("status") in ["completed", "rejected", "held"]:
+            return
+        
+        transfer_obj = Transfer(**transfer)
+        current_stage_idx = transfer_obj.current_stage_index
+        
+        # Check if we can advance and if stage requires manual approval
+        if current_stage_idx >= len(transfer_obj.stages) - 1:
+            return
+        
+        current_stage = transfer_obj.stages[current_stage_idx]
+        
+        # Skip auto-advancement for authorization stage if status is pending
+        if current_stage.stage_code == "AUTH" and transfer_obj.status == "pending":
+            return
+        
+        # Get timing for current stage
+        stage_delay = STAGE_TIMINGS.get(current_stage.stage_code, 30)
+        
+        if stage_delay > 0:
+            await asyncio.sleep(stage_delay)
+        
+        # Re-check transfer status before advancing
+        transfer = await db.transfers.find_one({"transfer_id": transfer_id})
+        if not transfer or transfer.get("status") in ["completed", "rejected", "held"]:
+            return
+        
+        # Advance to next stage
+        transfer_obj = Transfer(**transfer)
+        next_stage_idx = current_stage_idx + 1
+        
+        if next_stage_idx >= len(transfer_obj.stages):
+            return
+        
+        next_stage = transfer_obj.stages[next_stage_idx]
+        current_time = datetime.now(timezone.utc)
+        
+        # Update the stage
+        transfer_obj.stages[next_stage_idx].status = "completed"
+        transfer_obj.stages[next_stage_idx].timestamp = current_time
+        transfer_obj.stages[next_stage_idx].logs = generate_stage_logs(
+            {
+                "stage_code": next_stage.stage_code,
+                "stage_name": next_stage.stage_name,
+                "location": next_stage.location,
+                "description": next_stage.description
+            },
+            transfer_obj
+        )
+        
+        # Update transfer status
+        transfer_obj.current_stage_index = next_stage_idx
+        transfer_obj.current_stage = next_stage.stage_name.lower().replace(" ", "_")
+        transfer_obj.location = next_stage.location
+        
+        # Update overall status based on stage
+        if next_stage.stage_code == "AUTH":
+            # Don't auto-advance authorization - wait for manual approval
+            transfer_obj.status = "pending"
+        elif next_stage.stage_code in ["PROC", "NET", "INT"]:
+            transfer_obj.status = "processing"
+        elif next_stage.stage_code == "SETT":
+            transfer_obj.status = "in_transit"
+        elif next_stage.stage_code == "COMP":
+            transfer_obj.status = "completed"
+        
+        # Regenerate SWIFT logs
+        transfer_obj.swift_logs = generate_swift_logs(transfer_obj)
+        
+        # Add auto-advancement log
+        auto_log = {
+            "timestamp": current_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "message": f"AUTO STAGE ADVANCED: {next_stage.stage_name.upper()}",
+            "level": "SUCCESS"
+        }
+        transfer_obj.swift_logs.append(auto_log)
+        
+        # Update in database
+        await db.transfers.update_one(
+            {"transfer_id": transfer_id},
+            {"$set": transfer_obj.dict()}
+        )
+        
+        logger.info(f"Auto-advanced transfer {transfer_id} to stage {next_stage.stage_name}")
+        
+        # Schedule next advancement if not at final stage or authorization
+        if (next_stage_idx < len(transfer_obj.stages) - 1 and 
+            next_stage.stage_code != "AUTH"):
+            asyncio.create_task(auto_advance_transfer_stage(transfer_id))
+        
+    except Exception as e:
+        logger.error(f"Error in auto-advancement for transfer {transfer_id}: {e}")
+
+async def start_auto_progression_for_transfer(transfer_id: str):
+    """Start automated progression for a new transfer"""
+    asyncio.create_task(auto_advance_transfer_stage(transfer_id))
+
+@api_router.post("/transfers/toggle-auto-progression")
+async def toggle_auto_progression(
+    transfer_id: str, 
+    enable: bool, 
+    current_user: dict = Depends(verify_token)
+):
+    """Enable or disable auto-progression for a transfer"""
+    if current_user["role"] not in ["admin", "officer"]:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    
+    transfer = await db.transfers.find_one({"transfer_id": transfer_id})
+    if not transfer:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    
+    if enable:
+        # Start auto-progression
+        asyncio.create_task(auto_advance_transfer_stage(transfer_id))
+        message = "Auto-progression enabled"
+    else:
+        # Auto-progression will stop naturally when it checks status
+        message = "Auto-progression will stop at next check"
+    
+    return {
+        "transfer_id": transfer_id,
+        "auto_progression": enable,
+        "status": "success",
+        "message": message
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
