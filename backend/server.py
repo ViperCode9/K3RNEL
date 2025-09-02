@@ -110,6 +110,19 @@ class StageAdvancement(BaseModel):
     transfer_id: str
     target_stage: Optional[str] = None  # If None, advance to next stage
 
+# Automated progression settings
+STAGE_TIMINGS = {
+    "INIT": 2,    # 2 seconds - Initiated
+    "VAL": 15,    # 15 seconds - Validation
+    "AML": 30,    # 30 seconds - Compliance Check
+    "AUTH": 45,   # 45 seconds - Authorization (can be manual or auto)
+    "PROC": 20,   # 20 seconds - Processing
+    "NET": 25,    # 25 seconds - Network Transmission
+    "INT": 35,    # 35 seconds - Intermediary Bank
+    "SETT": 40,   # 40 seconds - Final Settlement
+    "COMP": 0     # 0 seconds - Completed (final stage)
+}
+
 class ActionResponse(BaseModel):
     action: str
     transfer_id: str
