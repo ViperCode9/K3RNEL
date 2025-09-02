@@ -444,14 +444,14 @@ function App() {
           <TabsContent value="simulation" className="space-y-6">
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Transfer Form */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="cyber-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Send className="h-5 w-5 mr-2 text-green-400" />
-                    Initiate Transfer
+                  <CardTitle className="flex items-center cyber-title text-cyan-400">
+                    <Send className="h-5 w-5 mr-2 text-cyan-400" />
+                    NETWORK TRANSFER INIT
                   </CardTitle>
-                  <CardDescription className="text-slate-400">
-                    Create a new SWIFT transfer simulation
+                  <CardDescription className="text-cyan-500 font-mono">
+                    Initialize secure banking network transfer
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
