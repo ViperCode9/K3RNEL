@@ -79,6 +79,8 @@ function App() {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTerminalPopup, setShowTerminalPopup] = useState(false);
+  const [terminalTransfer, setTerminalTransfer] = useState(null);
 
   useEffect(() => {
     if (token) {
