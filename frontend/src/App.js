@@ -344,43 +344,43 @@ function App() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-slate-800/90 border-slate-700 backdrop-blur-sm">
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md cyber-card">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <Terminal className="h-8 w-8 text-green-400 mr-2" />
-              <CardTitle className="text-2xl font-bold text-white">K3RN3L 808</CardTitle>
+              <Terminal className="h-8 w-8 text-cyan-400 mr-2" />
+              <CardTitle className="text-2xl font-bold cyber-title text-cyan-400">K3RN3L 808</CardTitle>
             </div>
-            <CardDescription className="text-slate-400">
-              Banking Funds Transfer Training System
+            <CardDescription className="text-cyan-300 font-mono">
+              SECURE BANKING NETWORK ACCESS
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={login} className="space-y-4">
               <div>
-                <Label htmlFor="username" className="text-slate-300">Username</Label>
+                <Label htmlFor="username" className="text-cyan-300 font-mono uppercase">Access ID</Label>
                 <Input
                   id="username"
                   type="text"
                   value={loginForm.username}
                   onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-black/50 border-cyan-500/30 text-cyan-300 font-mono focus:border-cyan-400 focus:ring-cyan-400"
                   placeholder="kompx3"
                 />
               </div>
               <div>
-                <Label htmlFor="password" className="text-slate-300">Password</Label>
+                <Label htmlFor="password" className="text-cyan-300 font-mono uppercase">Security Key</Label>
                 <Input
                   id="password"
                   type="password"
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-black/50 border-cyan-500/30 text-cyan-300 font-mono focus:border-cyan-400 focus:ring-cyan-400"
                   placeholder="K3RN3L808"
                 />
               </div>
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                Login to System
+              <Button type="submit" className="w-full cyber-button">
+                <span className="cyber-glitch">INITIALIZE SYSTEM</span>
               </Button>
             </form>
           </CardContent>
