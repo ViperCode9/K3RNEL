@@ -458,22 +458,22 @@ function App() {
                   <form onSubmit={createTransfer} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="sender_name" className="text-slate-300">Sender Name</Label>
+                        <Label htmlFor="sender_name" className="text-cyan-300 font-mono text-sm">ORIGIN NODE</Label>
                         <Input
                           id="sender_name"
                           value={transferForm.sender_name}
                           onChange={(e) => setTransferForm({ ...transferForm, sender_name: e.target.value })}
-                          className="bg-slate-700 border-slate-600 text-white"
+                          className="bg-black/50 border-cyan-500/30 text-cyan-300 font-mono focus:border-cyan-400 focus:ring-cyan-400"
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="sender_bic" className="text-slate-300">Sender BIC</Label>
+                        <Label htmlFor="sender_bic" className="text-cyan-300 font-mono text-sm">ORIGIN BIC</Label>
                         <Input
                           id="sender_bic"
                           value={transferForm.sender_bic}
                           onChange={(e) => setTransferForm({ ...transferForm, sender_bic: e.target.value })}
-                          className="bg-slate-700 border-slate-600 text-white"
+                          className="bg-black/50 border-cyan-500/30 text-cyan-300 font-mono focus:border-cyan-400 focus:ring-cyan-400"
                           placeholder="CHASUS33XXX"
                           required
                         />
