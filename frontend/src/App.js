@@ -390,20 +390,25 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      <header className="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm">
+    <div className="min-h-screen text-cyan-300">
+      <header className="border-b border-cyan-500/20 bg-black/60 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center">
-            <Terminal className="h-6 w-6 text-green-400 mr-2" />
-            <h1 className="text-xl font-bold">K3RN3L 808</h1>
-            <span className="ml-2 text-sm text-slate-400">Banking Simulation</span>
+            <Terminal className="h-6 w-6 text-cyan-400 mr-2" />
+            <h1 className="text-xl font-bold cyber-title text-cyan-400">K3RN3L 808</h1>
+            <span className="ml-2 text-sm text-cyan-500 font-mono">BANKING NETWORK</span>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-slate-400">
-              {user?.full_name} ({user?.role})
+            <span className="text-sm text-cyan-400 font-mono">
+              {user?.full_name} [{user?.role?.toUpperCase()}]
             </span>
-            <Button variant="outline" size="sm" onClick={logout}>
-              Logout
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={logout}
+              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-400"
+            >
+              DISCONNECT
             </Button>
           </div>
         </div>
