@@ -180,6 +180,11 @@ function App() {
     try {
       const response = await axios.post(`${API}/auth/login`, loginForm);
       const { access_token, user: userData } = response.data;
+      
+      // Start connection sequence
+      setShowConnectionSequence(true);
+      await simulateConnectionSequence();
+      
       setToken(access_token);
       setUser(userData);
       localStorage.setItem('token', access_token);
@@ -187,6 +192,34 @@ function App() {
     } catch (error) {
       alert('Login failed: ' + (error.response?.data?.detail || 'Unknown error'));
     }
+  };
+
+  const simulateConnectionSequence = async () => {
+    const steps = [
+      { step: 0, message: "Initializing secure connection...", delay: 1000 },
+      { step: 1, message: "Connecting to SWIFT Global Network...", delay: 2000 },
+      { step: 2, message: "PING swift.com: 64 bytes from 195.35.171.130: icmp_seq=1 ttl=56 time=12.4ms", delay: 1500 },
+      { step: 3, message: "PING swift.com: 64 bytes from 195.35.171.130: icmp_seq=2 ttl=56 time=11.8ms", delay: 1500 },
+      { step: 4, message: "Network latency: 12.1ms | Jitter: 0.6ms | Status: OPTIMAL", delay: 2000 },
+      { step: 5, message: "Authenticating with SWIFT Alliance Connect...", delay: 2000 },
+      { step: 6, message: "PKI Certificate validation: PASSED", delay: 1500 },
+      { step: 7, message: "HSM Security Module: ONLINE", delay: 1500 },
+      { step: 8, message: "Establishing secure FIN.25 session...", delay: 2000 },
+      { step: 9, message: "Session ID: SES20250903015610-K3RN3L808", delay: 1500 },
+      { step: 10, message: "SWIFT Network Access: GRANTED", delay: 1500 },
+      { step: 11, message: "Loading banking modules...", delay: 2000 },
+      { step: 12, message: "Connection established. Welcome to FUNDTRANS SERVER v8.08", delay: 1000 }
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      setConnectionStep(i);
+      setConnectionLogs(prev => [...prev, steps[i].message]);
+      await new Promise(resolve => setTimeout(resolve, steps[i].delay));
+    }
+    
+    setShowConnectionSequence(false);
+    setConnectionLogs([]);
+    setConnectionStep(0);
   };
 
   const logout = () => {
