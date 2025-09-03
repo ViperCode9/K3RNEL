@@ -1649,6 +1649,71 @@ function App() {
         </Tabs>
       </div>
 
+      {/* SWIFT Connection Sequence */}
+      {showConnectionSequence && (
+        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+          <div className="w-full max-w-4xl h-96 terminal-card p-0">
+            <div className="terminal-header">
+              <div className="flex items-center">
+                <div className="server-status online"></div>
+                <Terminal className="h-4 w-4 text-green-400 mr-2" />
+                <span className="terminal-title text-xs">SWIFT_NETWORK_AUTHENTICATION</span>
+              </div>
+            </div>
+            
+            <div className="p-6 h-full overflow-y-auto">
+              <div className="ascii-art text-center mb-4 text-xs">
+{`
+  ███████╗██╗    ██╗██╗███████╗████████╗    ███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
+  ██╔════╝██║    ██║██║██╔════╝╚══██╔══╝    ████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
+  ███████╗██║ █╗ ██║██║█████╗     ██║       ██╔██╗ ██║█████╗     ██║   ██║ █╗ ██║██║   ██║██████╔╝█████╔╝ 
+  ╚════██║██║███╗██║██║██╔══╝     ██║       ██║╚██╗██║██╔══╝     ██║   ██║███╗██║██║   ██║██╔══██╗██╔═██╗ 
+  ███████║╚███╔███╔╝██║██║        ██║       ██║ ╚████║███████╗   ██║   ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
+  ╚══════╝ ╚══╝╚══╝ ╚═╝╚═╝        ╚═╝       ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+`}
+              </div>
+              
+              <div className="mb-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-green-400 font-mono text-xs">CONNECTION_PROGRESS:</span>
+                  <div className="ml-3 flex-1 bg-black border border-green-500 h-4 relative">
+                    <div 
+                      className="h-full bg-green-500 transition-all duration-500"
+                      style={{ width: `${((connectionStep + 1) / 13) * 100}%` }}
+                    ></div>
+                    <span className="absolute inset-0 flex items-center justify-center text-black font-mono text-xs font-bold">
+                      {Math.round(((connectionStep + 1) / 13) * 100)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="terminal-card p-4 h-64 overflow-y-auto">
+                <div className="font-mono text-xs space-y-1">
+                  {connectionLogs.map((log, index) => (
+                    <div key={index} className="text-green-400">
+                      <span className="text-green-600">[{new Date().toLocaleTimeString()}]</span> {log}
+                    </div>
+                  ))}
+                  <div className="text-green-400">
+                    <span className="terminal-cursor">▋</span> Processing...
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 text-center">
+                <div className="text-green-600 font-mono text-xs">
+                  ESTABLISHING SECURE CONNECTION TO SWIFT GLOBAL NETWORK
+                </div>
+                <div className="text-green-500 font-mono text-xs mt-1">
+                  PLEASE WAIT... {22 - Math.round((connectionStep / 13) * 22)}s remaining
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Server Terminal Popup */}
       {showTerminalPopup && terminalTransfer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
