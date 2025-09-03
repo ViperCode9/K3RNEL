@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class K3RN3LBankingAPITester:
-    def __init__(self, base_url="https://kernel808-sim.preview.emergentagent.com"):
+    def __init__(self, base_url="https://repo-checkup-3.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.token = None

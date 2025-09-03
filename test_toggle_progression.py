@@ -4,7 +4,7 @@ import json
 def test_toggle_auto_progression():
     """Test the toggle auto-progression endpoint"""
     
-    base_url = "https://kernel808-sim.preview.emergentagent.com"
+    base_url = "https://repo-checkup-3.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # Login first

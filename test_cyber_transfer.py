@@ -5,7 +5,7 @@ import json
 def test_cyber_transfer_with_auto_progression():
     """Test creating the specific cyber transfer and monitor auto-progression"""
     
-    base_url = "https://kernel808-sim.preview.emergentagent.com"
+    base_url = "https://repo-checkup-3.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # Login first
