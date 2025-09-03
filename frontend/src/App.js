@@ -536,7 +536,7 @@ function App() {
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                   className="terminal-input text-base h-12"
-                  placeholder="K3RN3L808"
+                  placeholder="Chotti-Tannu9"
                   required
                 />
               </div>
