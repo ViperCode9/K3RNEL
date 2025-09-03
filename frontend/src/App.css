@@ -44,10 +44,10 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 3px;
-  color: #00ff00;
+  color: var(--primary-100);
   text-shadow: 
-    0 0 5px rgba(0, 255, 0, 0.8),
-    0 0 10px rgba(0, 255, 0, 0.6);
+    0 0 5px rgba(255, 193, 7, 0.8),
+    0 0 10px rgba(255, 193, 7, 0.6);
 }
 
 /* ASCII Art Styling */
