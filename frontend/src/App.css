@@ -31,7 +31,7 @@ body {
 
 .App {
   min-height: 100vh;
-  background: #000000;
+  background: linear-gradient(135deg, var(--bg-100) 0%, var(--bg-200) 50%, var(--bg-100) 100%);
 }
 
 /* Terminal styling */
