@@ -348,45 +348,56 @@ function App() {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md cyber-card">
-          <CardHeader className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <Terminal className="h-8 w-8 text-cyan-400 mr-2" />
-              <CardTitle className="text-2xl font-bold cyber-title text-cyan-400">K3RN3L 808</CardTitle>
+      <div className="min-h-screen flex items-center justify-center p-4 terminal-scanlines">
+        <Card className="w-full max-w-lg terminal-card">
+          <CardHeader className="text-center server-panel-header">
+            <div className="ascii-art mb-4">
+{`
+███████╗██╗   ██╗███╗   ██╗██████╗ ████████╗██████╗  █████╗ ███╗   ██╗███████╗
+██╔════╝██║   ██║████╗  ██║██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗████╗  ██║██╔════╝
+█████╗  ██║   ██║██╔██╗ ██║██║  ██║   ██║   ██████╔╝███████║██╔██╗ ██║███████╗
+██╔══╝  ██║   ██║██║╚██╗██║██║  ██║   ██║   ██╔══██╗██╔══██║██║╚██╗██║╚════██║
+██║     ╚██████╔╝██║ ╚████║██████╔╝   ██║   ██║  ██║██║  ██║██║ ╚████║███████║
+╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝
+`}
             </div>
-            <CardDescription className="text-cyan-300 font-mono">
-              SECURE BANKING NETWORK ACCESS
+            <CardTitle className="text-xl font-bold terminal-title">SERVER FUND TRANSFER TERMINAL</CardTitle>
+            <CardDescription className="text-green-400 font-mono text-sm mt-2">
+              <div className="server-status online"></div>
+              SECURE BANKING NETWORK :: AUTHENTICATED ACCESS REQUIRED
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <form onSubmit={login} className="space-y-4">
               <div>
-                <Label htmlFor="username" className="text-cyan-300 font-mono uppercase">Access ID</Label>
+                <Label htmlFor="username" className="text-green-400 font-mono text-sm">$ USER_ID:</Label>
                 <Input
                   id="username"
                   type="text"
                   value={loginForm.username}
                   onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="bg-black/50 border-cyan-500/30 text-cyan-300 font-mono focus:border-cyan-400 focus:ring-cyan-400"
+                  className="terminal-input mt-1"
                   placeholder="kompx3"
                 />
               </div>
               <div>
-                <Label htmlFor="password" className="text-cyan-300 font-mono uppercase">Security Key</Label>
+                <Label htmlFor="password" className="text-green-400 font-mono text-sm">$ AUTH_TOKEN:</Label>
                 <Input
                   id="password"
                   type="password"
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="bg-black/50 border-cyan-500/30 text-cyan-300 font-mono focus:border-cyan-400 focus:ring-cyan-400"
+                  className="terminal-input mt-1"
                   placeholder="K3RN3L808"
                 />
               </div>
-              <Button type="submit" className="w-full cyber-button">
-                <span className="cyber-glitch">INITIALIZE SYSTEM</span>
+              <Button type="submit" className="w-full terminal-button mt-6">
+                >> ESTABLISH SECURE CONNECTION
               </Button>
             </form>
+            <div className="mt-4 text-xs font-mono text-green-600">
+              [SYSTEM] Waiting for authentication<span className="terminal-cursor">_</span>
+            </div>
           </CardContent>
         </Card>
       </div>
