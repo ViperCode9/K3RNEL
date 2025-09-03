@@ -96,6 +96,17 @@ function App() {
     if (token) {
       fetchUserProfile();
       fetchTransfers();
+      fetchNetworkStatus();
+      fetchServerPerformance();
+      fetchSecurityIncidents();
+      
+      // Set up real-time monitoring
+      const interval = setInterval(() => {
+        fetchNetworkStatus();
+        fetchServerPerformance();
+      }, 5000); // Update every 5 seconds
+      
+      return () => clearInterval(interval);
     }
   }, [token]);
 
