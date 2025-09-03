@@ -115,6 +115,28 @@ class StageAdvancement(BaseModel):
     transfer_id: str
     target_stage: Optional[str] = None  # If None, advance to next stage
 
+class SecurityIncident(BaseModel):
+    incident_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    incident_type: str  # brute_force, suspicious_login, high_value_alert
+    severity: str  # low, medium, high, critical
+    description: str
+    source_ip: str
+    user_id: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    status: str = "active"  # active, investigating, resolved
+    mitigation_steps: List[str] = Field(default_factory=list)
+
+class CommandExecution(BaseModel):
+    command: str
+    args: Optional[List[str]] = Field(default_factory=list)
+
+class ReportRequest(BaseModel):
+    report_type: str  # transfer_summary, compliance_report, audit_log
+    format: str = "json"  # json, csv, pdf
+    date_from: Optional[datetime] = None
+    date_to: Optional[datetime] = None
+    filters: Optional[Dict[str, Any]] = Field(default_factory=dict)
+
 # Automated progression settings
 STAGE_TIMINGS = {
     "INIT": 2,    # 2 seconds - Initiated
