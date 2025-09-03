@@ -1604,12 +1604,29 @@ function App() {
                       )}
                     </div>
 
-                    {/* Transfer Location Map */}
-                    <div className="bg-slate-700/30 rounded-lg p-6 border border-slate-600">
-                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                        <MapPin className="h-5 w-5 mr-2 text-green-400" />
-                        Current Location & Route
-                      </h3>
+                    {/* Network Topology Visualization */}
+                    <div className="terminal-card p-4">
+                      <div className="server-panel-header mb-4">
+                        <h3 className="terminal-title text-sm flex items-center">
+                          <MapPin className="h-4 w-4 mr-2 text-green-400" />
+                          NETWORK_TOPOLOGY_MAP
+                        </h3>
+                      </div>
+                      
+                      <div className="ascii-art mb-4 text-xs">
+{`
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ ORIGIN_NODE │────▶│SWIFT_NETWORK│────▶│INTERMEDIARY │────▶│TARGET_NODE  │
+│  ${selectedTransfer.sender_bic}  │     │             │     │    BANK     │     │  ${selectedTransfer.receiver_bic}  │
+│   Status:   │     │   Routing   │     │   Process   │     │   Status:   │
+│   ${selectedTransfer.location === 'sending_bank' ? '[ACTIVE]' : '[IDLE]  '}   │     │   ${selectedTransfer.location === 'swift_network' ? '[ACTIVE]' : '[IDLE]  '}   │     │   ${selectedTransfer.location === 'intermediary_bank' ? '[ACTIVE]' : '[IDLE]  '}   │     │   ${selectedTransfer.location === 'receiving_bank' ? '[ACTIVE]' : '[IDLE]  '}   │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+       │                     │                     │                     │
+       ▼                     ▼                     ▼                     ▼
+  [BIC VERIFY]         [PKI SECURE]         [CORR BANK]         [FINAL SETT]
+  [AML/KYC OK]         [ENCRYPTED ]         [VALIDATED]         [COMPLETED ]
+`}
+                      </div>
                       
                       <div className="flex items-center justify-between bg-slate-800/50 rounded-lg p-4 overflow-x-auto">
                         {/* Sending Bank */}
