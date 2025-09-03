@@ -1682,22 +1682,95 @@ function App() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <Navigation className="h-16 w-16 mx-auto mb-4 text-slate-500 opacity-50" />
-                    <h3 className="text-lg font-medium text-slate-400 mb-2">Select a Transfer to Track</h3>
-                    <p className="text-slate-500 mb-4">Choose a transfer from the dashboard to view detailed stage tracking</p>
-                    <Button 
-                      onClick={() => {
-                        // Auto-select the first pending transfer if available
-                        const pendingTransfer = transfers.find(t => t.status !== 'completed');
-                        if (pendingTransfer) {
-                          setSelectedTransfer(pendingTransfer);
-                        }
-                      }}
-                      variant="outline"
-                    >
-                      Select Transfer
-                    </Button>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Network Overview */}
+                    <Card className="terminal-card">
+                      <div className="server-panel-header">
+                        <h3 className="terminal-title text-sm">GLOBAL_NETWORK_STATUS</h3>
+                      </div>
+                      <CardContent className="p-4">
+                        <div className="ascii-art text-xs mb-4">
+{`
+    ╭─────────────────────────────────────────╮
+    │           SWIFT GLOBAL NETWORK          │
+    │                                         │
+    │  ● EUROPE    [████████████] 92% ONLINE │
+    │  ● AMERICAS  [█████████   ] 76% ONLINE │
+    │  ● ASIA-PAC  [██████████  ] 84% ONLINE │
+    │  ● AFRICA    [█████       ] 45% ONLINE │
+    │                                         │
+    │  TOTAL NODES: 11,254                    │
+    │  ACTIVE SESS: 8,847                     │
+    │  MSG/SEC:     2,847                     │
+    ╰─────────────────────────────────────────╯
+`}
+                        </div>
+                        <div className="space-y-2 text-xs font-mono">
+                          <div className="flex justify-between">
+                            <span className="text-green-600">NETWORK_LATENCY:</span>
+                            <span className="text-green-400">12.4ms</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-green-600">THROUGHPUT:</span>
+                            <span className="text-green-400">2.8K msg/sec</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-green-600">ERROR_RATE:</span>
+                            <span className="text-yellow-400">0.02%</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Live Server Logs */}
+                    <Card className="terminal-card">
+                      <div className="server-panel-header">
+                        <h3 className="terminal-title text-sm">LIVE_SERVER_LOGS</h3>
+                      </div>
+                      <CardContent className="p-4">
+                        <ScrollArea className="h-64 w-full border border-green-500 p-3 bg-black">
+                          <div className="font-mono text-xs space-y-1">
+                            <div className="text-green-400">[15:43:12] SWIFT_SESSION: New connection from 192.168.1.247</div>
+                            <div className="text-green-400">[15:43:15] MT103_PARSER: Message validated successfully</div>
+                            <div className="text-yellow-400">[15:43:18] AML_ENGINE: Screening check initiated</div>
+                            <div className="text-green-400">[15:43:20] PKI_VALIDATOR: Certificate chain verified</div>
+                            <div className="text-green-400">[15:43:23] ROUTING_ENGINE: Path calculated via DEUTDEFF</div>
+                            <div className="text-blue-400">[15:43:25] NETWORK_QUEUE: Message queued for transmission</div>
+                            <div className="text-green-400">[15:43:28] SWIFT_ALLIANCE: ACK received from target</div>
+                            <div className="text-green-400">[15:43:30] LEDGER_ENGINE: Double-entry posted</div>
+                            <div className="text-green-400">[15:43:33] UETR_SERVICE: Tracker updated with status</div>
+                            <div className="text-green-400">[15:43:35] COMPLIANCE: Transaction cleared</div>
+                            <div className="text-green-400">[15:43:38] SETTLEMENT: Final confirmation received</div>
+                            <div className="text-green-400">[15:43:40] AUDIT_LOG: Transaction completed successfully</div>
+                            <div className="text-green-600">[15:43:42] SYSTEM: Ready for next transaction</div>
+                            <div className="text-green-400">
+                              <span className="terminal-cursor">▋</span> Monitoring active...
+                            </div>
+                          </div>
+                        </ScrollArea>
+                      </CardContent>
+                    </Card>
+
+                    {/* Select Transfer Prompt */}
+                    <Card className="terminal-card lg:col-span-2">
+                      <CardContent className="p-8 text-center">
+                        <Navigation className="h-12 w-12 mx-auto mb-4 text-green-600 opacity-50" />
+                        <h3 className="text-sm font-medium text-green-400 mb-2 font-mono">SELECT_TRANSFER_FOR_DETAILED_TRACE</h3>
+                        <p className="text-green-600 mb-4 font-mono text-xs">Choose a transfer from SERVER_MONITOR to view network trace</p>
+                        <Button 
+                          onClick={() => {
+                            // Auto-select the first pending transfer if available
+                            const pendingTransfer = transfers.find(t => t.status !== 'completed');
+                            if (pendingTransfer) {
+                              setSelectedTransfer(pendingTransfer);
+                            }
+                          }}
+                          className="terminal-button text-xs"
+                        >
+                          AUTO_SELECT_TRANSFER
+                        </Button>
+                      </CardContent>
+                    </Card>
                   </div>
                 )}
               </CardContent>
