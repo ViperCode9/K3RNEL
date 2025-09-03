@@ -858,6 +858,14 @@ function App() {
                           <XCircle className="h-4 w-4 mr-1" />
                           Reject
                         </Button>
+                        <Button
+                          onClick={() => downloadTransferPDF(selectedTransfer.transfer_id)}
+                          className="terminal-button"
+                          size="sm"
+                        >
+                          <Download className="h-4 w-4 mr-1" />
+                          PDF
+                        </Button>
                       </div>
                     )}
                   </CardContent>
