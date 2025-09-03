@@ -18,27 +18,58 @@ body {
 
 .App {
   min-height: 100vh;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(0, 255, 127, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(127, 0, 255, 0.1) 0%, transparent 50%),
-    linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+  background: #000000;
 }
 
-/* Cyber Terminal styling */
+/* Terminal styling */
 .font-mono {
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-family: 'JetBrains Mono', 'Source Code Pro', monospace;
 }
 
-.cyber-title {
-  font-family: 'Orbitron', monospace;
+.terminal-title {
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  color: #00ff00;
   text-shadow: 
-    0 0 10px rgba(0, 255, 255, 0.8),
-    0 0 20px rgba(0, 255, 255, 0.6),
-    0 0 30px rgba(0, 255, 255, 0.4);
+    0 0 5px rgba(0, 255, 0, 0.8),
+    0 0 10px rgba(0, 255, 0, 0.6);
+}
+
+/* ASCII Art Styling */
+.ascii-art {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  line-height: 1;
+  color: #00ff00;
+  white-space: pre;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+}
+
+/* Server Status Indicators */
+.server-status {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: pulse 2s infinite;
+}
+
+.server-status.online {
+  background: #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.server-status.warning {
+  background: #ffff00;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+.server-status.error {
+  background: #ff0000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
 }
 
 /* Cyber Terminal Window */
