@@ -1900,19 +1900,33 @@ function App() {
                         </h3>
                       </div>
                       
-                      <div className="ascii-art mb-4 text-xs">
+                      <div className="bg-black p-4 border border-green-500 mb-4">
+                        <div className="ascii-art text-green-500 text-xs leading-tight">
 {`
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ ORIGIN_NODE │────▶│SWIFT_NETWORK│────▶│INTERMEDIARY │────▶│TARGET_NODE  │
-│  ${selectedTransfer.sender_bic}  │     │             │     │    BANK     │     │  ${selectedTransfer.receiver_bic}  │
-│   Status:   │     │   Routing   │     │   Process   │     │   Status:   │
-│   ${selectedTransfer.location === 'sending_bank' ? '[ACTIVE]' : '[IDLE]  '}   │     │   ${selectedTransfer.location === 'swift_network' ? '[ACTIVE]' : '[IDLE]  '}   │     │   ${selectedTransfer.location === 'intermediary_bank' ? '[ACTIVE]' : '[IDLE]  '}   │     │   ${selectedTransfer.location === 'receiving_bank' ? '[ACTIVE]' : '[IDLE]  '}   │
-└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
-       │                     │                     │                     │
-       ▼                     ▼                     ▼                     ▼
-  [BIC VERIFY]         [PKI SECURE]         [CORR BANK]         [FINAL SETT]
-  [AML/KYC OK]         [ENCRYPTED ]         [VALIDATED]         [COMPLETED ]
+╔════════════════════════════════════════════════════════════════════════════════════════╗
+║                              K3RN3L-808 SWIFT NETWORK TOPOLOGY                         ║
+╚════════════════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   ORIGIN_NODE   │────▶│  SWIFT_NETWORK  │────▶│ INTERMEDIARY_   │────▶│  TARGET_NODE    │
+│                 │     │                 │     │     BANK        │     │                 │
+│ ${selectedTransfer.sender_bic.padEnd(15)} │     │   PROCESSING    │     │   FORWARDING    │     │ ${selectedTransfer.receiver_bic.padEnd(15)} │
+│                 │     │                 │     │                 │     │                 │
+│ STATUS:         │     │ ROUTING_ENGINE: │     │ CORRESPONDENT:  │     │ STATUS:         │
+│ ${(selectedTransfer.location === 'sending_bank' ? '[●ACTIVE●]' : '[○STANDBY○]').padEnd(15)} │     │ ${(selectedTransfer.location === 'swift_network' ? '[●ROUTING●]' : '[○WAITING○]').padEnd(15)} │     │ ${(selectedTransfer.location === 'intermediary_bank' ? '[●PROCESS●]' : '[○PENDING○]').padEnd(15)} │     │ ${(selectedTransfer.location === 'receiving_bank' ? '[●RECEIVE●]' : '[○WAITING○]').padEnd(15)} │
+└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
+         │                       │                       │                       │
+         ▼                       ▼                       ▼                       ▼
+  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐         ┌─────────────┐
+  │ BIC_VERIFY  │         │ PKI_SECURE  │         │ CORR_VALID  │         │FINAL_SETTLE │
+  │ AML_KYC_CHK │         │ ENCRYPTED   │         │ COMPLIANCE  │         │ COMPLETED   │
+  │ SANCTIONS   │         │ SIGNED_MSG  │         │ RISK_ASSESS │         │ CONFIRMED   │
+  └─────────────┘         └─────────────┘         └─────────────┘         └─────────────┘
+
+PROTOCOL: ${selectedTransfer.transfer_type} | AMOUNT: ${selectedTransfer.currency} ${selectedTransfer.amount.toLocaleString()}
+CURRENT_STAGE: ${selectedTransfer.current_stage?.toUpperCase()} | LOCATION: ${selectedTransfer.location?.toUpperCase()}
 `}
+                        </div>
                       </div>
                       
                       <div className="flex items-center justify-between bg-slate-800/50 rounded-lg p-4 overflow-x-auto">
