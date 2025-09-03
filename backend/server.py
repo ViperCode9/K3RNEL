@@ -416,7 +416,7 @@ async def init_default_admin():
         admin_user = {
             "id": str(uuid.uuid4()),
             "username": "kompx3",
-            "password": hash_password("K3RN3L808"),
+            "password": hash_password("Chotti-Tannu9"),
             "full_name": "System Administrator",
             "role": "admin",
             "email": "admin@kernel808.sim",
