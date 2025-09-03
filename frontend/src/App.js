@@ -537,6 +537,13 @@ function App() {
               USR: {user?.username} | LVL: {user?.role?.toUpperCase()} | SID: {user?.id?.substring(0,8)}
             </span>
             <Button 
+              onClick={() => setShowCliTerminal(true)}
+              className="terminal-button text-xs px-2 py-1"
+              size="sm"
+            >
+              CLI_TERM
+            </Button>
+            <Button 
               variant="outline" 
               size="sm" 
               onClick={logout}
