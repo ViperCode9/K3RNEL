@@ -130,14 +130,57 @@ body {
   background: #00cc00;
 }
 
-/* Animation for terminal cursor */
+/* Terminal cursor animation */
 @keyframes terminal-blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
 
-.animate-pulse {
-  animation: terminal-blink 1.5s infinite;
+.terminal-cursor {
+  animation: terminal-blink 1s infinite;
+  color: #00ff00;
+}
+
+/* System load animation */
+@keyframes load-indicator {
+  0% { transform: scaleX(0); }
+  50% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+
+.load-bar {
+  height: 2px;
+  background: #00ff00;
+  animation: load-indicator 2s infinite;
+}
+
+/* Network status pulse */
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Terminal scan lines effect */
+.terminal-scanlines {
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-scanlines::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    transparent 50%,
+    rgba(0, 255, 0, 0.02) 50%
+  );
+  background-size: 100% 2px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Terminal Card Effects */
