@@ -460,7 +460,7 @@ function App() {
               onClick={logout}
               className="terminal-button text-xs px-2 py-1"
             >
-              >> LOGOUT
+              {">> LOGOUT"}
             </Button>
           </div>
         </div>
