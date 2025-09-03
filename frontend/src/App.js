@@ -457,14 +457,14 @@ function App() {
           <TabsContent value="simulation" className="space-y-6">
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Transfer Form */}
-              <Card className="cyber-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center cyber-title text-cyan-400">
-                    <Send className="h-5 w-5 mr-2 text-cyan-400" />
-                    NETWORK TRANSFER INIT
+              <Card className="terminal-card">
+                <CardHeader className="server-panel-header">
+                  <CardTitle className="flex items-center terminal-title text-green-400 text-sm">
+                    <Send className="h-4 w-4 mr-2 text-green-400" />
+                    FUND_TRANSFER_INIT_MODULE
                   </CardTitle>
-                  <CardDescription className="text-cyan-500 font-mono">
-                    Initialize secure banking network transfer
+                  <CardDescription className="text-green-600 font-mono text-xs mt-2">
+                    >> Initialize secure server-to-server fund transfer protocol
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
