@@ -891,15 +891,23 @@ function App() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-green-600 font-mono text-xs">SERVER_LOAD</p>
-                      <p className="text-lg font-bold text-green-400 font-mono">47%</p>
+                      <p className="text-lg font-bold text-green-400 font-mono">
+                        {serverPerformance?.cpu_usage?.toFixed(1) || '47'}%
+                      </p>
                     </div>
                     <div className="h-6 w-6 border border-green-500 relative">
-                      <div className="absolute bottom-0 w-full bg-green-500" style={{ height: '47%' }}></div>
+                      <div 
+                        className="absolute bottom-0 w-full bg-green-500" 
+                        style={{ height: `${serverPerformance?.cpu_usage || 47}%` }}
+                      ></div>
                     </div>
                   </div>
                   <div className="mt-1">
                     <div className="h-1 bg-black border border-green-500">
-                      <div className="h-full bg-green-500" style={{ width: '47%' }}></div>
+                      <div 
+                        className="h-full bg-green-500" 
+                        style={{ width: `${serverPerformance?.cpu_usage || 47}%` }}
+                      ></div>
                     </div>
                   </div>
                 </CardContent>
