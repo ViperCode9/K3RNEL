@@ -337,28 +337,48 @@ body {
 
 /* Terminal Button Styles */
 .terminal-button {
-  background: #000000;
-  border: 1px solid #00ff00;
-  color: #00ff00;
+  background: var(--bg-100);
+  border: 1px solid var(--primary-100);
+  color: var(--primary-100);
   text-transform: uppercase;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
   letter-spacing: 1px;
-  border-radius: 0;
+  border-radius: 2px;
   transition: all 0.2s ease;
   position: relative;
+  overflow: hidden;
 }
 
 .terminal-button:hover {
-  background: #001100;
-  border-color: #00ff00;
-  color: #00ff00;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  background: var(--bg-300);
+  border-color: var(--primary-100);
+  color: var(--primary-100);
+  box-shadow: 
+    0 0 12px rgba(0, 255, 65, 0.4),
+    inset 0 0 12px rgba(0, 255, 65, 0.1);
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.6);
 }
 
 .terminal-button:active {
-  background: #00ff00;
-  color: #000000;
+  background: var(--primary-100);
+  color: var(--bg-100);
+  transform: translateY(1px);
+}
+
+.terminal-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.terminal-button:hover::before {
+  left: 100%;
 }
 
 /* Command Line Input Style */
