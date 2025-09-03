@@ -383,22 +383,31 @@ body {
 
 /* Command Line Input Style */
 .terminal-input {
-  background: #000000;
-  border: 1px solid #00ff00;
-  color: #00ff00;
+  background: var(--bg-100);
+  border: 1px solid var(--primary-300);
+  color: var(--primary-100);
   font-family: 'JetBrains Mono', monospace;
-  border-radius: 0;
-  padding: 8px;
+  border-radius: 2px;
+  padding: 10px 12px;
+  transition: all 0.2s ease;
 }
 
 .terminal-input:focus {
-  border-color: #00ff00;
-  box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+  border-color: var(--primary-100);
+  box-shadow: 
+    0 0 8px rgba(0, 255, 65, 0.4),
+    inset 0 0 8px rgba(0, 255, 65, 0.1);
   outline: none;
+  text-shadow: 0 0 2px rgba(0, 255, 65, 0.6);
 }
 
 .terminal-input::placeholder {
-  color: #006600;
+  color: var(--primary-300);
+}
+
+.terminal-input:hover {
+  border-color: var(--primary-200);
+  box-shadow: 0 0 4px rgba(0, 255, 65, 0.2);
 }
 
 /* Input focus styles */
