@@ -1714,7 +1714,7 @@ function App() {
               
               <div className="mt-4 flex justify-between items-center text-xs font-mono">
                 <div className="text-green-600">
-                  >> AUTO_STAGE_PROGRESSION: ENABLED
+                  {">> AUTO_STAGE_PROGRESSION: ENABLED"}
                 </div>
                 <div className="flex space-x-2">
                   <Button
