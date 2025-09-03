@@ -81,6 +81,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [showTerminalPopup, setShowTerminalPopup] = useState(false);
   const [terminalTransfer, setTerminalTransfer] = useState(null);
+  const [showConnectionSequence, setShowConnectionSequence] = useState(false);
+  const [connectionStep, setConnectionStep] = useState(0);
+  const [connectionLogs, setConnectionLogs] = useState([]);
 
   useEffect(() => {
     if (token) {
