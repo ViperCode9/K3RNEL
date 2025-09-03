@@ -732,53 +732,93 @@ function App() {
 
           <TabsContent value="dashboard" className="space-y-6">
             {/* Dashboard Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardContent className="p-4">
+            {/* Server Performance Monitoring */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+              <Card className="terminal-card">
+                <CardContent className="p-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-slate-400">Total Transfers</p>
-                      <p className="text-2xl font-bold text-white">{getTransferStats().total}</p>
+                      <p className="text-green-600 font-mono text-xs">TOTAL_TRANSFERS</p>
+                      <p className="text-lg font-bold text-green-400 font-mono">{getTransferStats().total}</p>
                     </div>
-                    <Activity className="h-8 w-8 text-blue-400" />
+                    <Activity className="h-6 w-6 text-green-400" />
+                  </div>
+                  <div className="mt-1">
+                    <div className="h-1 bg-black border border-green-500">
+                      <div className="h-full bg-green-500" style={{ width: '85%' }}></div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardContent className="p-4">
+              <Card className="terminal-card">
+                <CardContent className="p-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-slate-400">Pending</p>
-                      <p className="text-2xl font-bold text-yellow-400">{getTransferStats().pending}</p>
+                      <p className="text-green-600 font-mono text-xs">PENDING_QUEUE</p>
+                      <p className="text-lg font-bold text-yellow-400 font-mono">{getTransferStats().pending}</p>
                     </div>
-                    <Clock className="h-8 w-8 text-yellow-400" />
+                    <Clock className="h-6 w-6 text-yellow-400" />
+                  </div>
+                  <div className="mt-1">
+                    <div className="h-1 bg-black border border-yellow-500">
+                      <div className="h-full bg-yellow-500" style={{ width: '35%' }}></div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardContent className="p-4">
+              <Card className="terminal-card">
+                <CardContent className="p-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-slate-400">Completed</p>
-                      <p className="text-2xl font-bold text-green-400">{getTransferStats().completed}</p>
+                      <p className="text-green-600 font-mono text-xs">COMPLETED</p>
+                      <p className="text-lg font-bold text-green-400 font-mono">{getTransferStats().completed}</p>
                     </div>
-                    <CheckCircle className="h-8 w-8 text-green-400" />
+                    <CheckCircle className="h-6 w-6 text-green-400" />
+                  </div>
+                  <div className="mt-1">
+                    <div className="h-1 bg-black border border-green-500">
+                      <div className="h-full bg-green-500" style={{ width: '92%' }}></div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardContent className="p-4">
+              <Card className="terminal-card">
+                <CardContent className="p-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-slate-400">Total Volume</p>
-                      <p className="text-2xl font-bold text-white">
-                        ${getTransferStats().totalAmount.toLocaleString()}
+                      <p className="text-green-600 font-mono text-xs">NET_VOLUME</p>
+                      <p className="text-lg font-bold text-green-400 font-mono">
+                        €{getTransferStats().totalAmount.toLocaleString()}
                       </p>
                     </div>
-                    <DollarSign className="h-8 w-8 text-green-400" />
+                    <DollarSign className="h-6 w-6 text-green-400" />
+                  </div>
+                  <div className="mt-1">
+                    <div className="h-1 bg-black border border-green-500">
+                      <div className="h-full bg-green-500" style={{ width: '78%' }}></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="terminal-card">
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-green-600 font-mono text-xs">SERVER_LOAD</p>
+                      <p className="text-lg font-bold text-green-400 font-mono">47%</p>
+                    </div>
+                    <div className="h-6 w-6 border border-green-500 relative">
+                      <div className="absolute bottom-0 w-full bg-green-500" style={{ height: '47%' }}></div>
+                    </div>
+                  </div>
+                  <div className="mt-1">
+                    <div className="h-1 bg-black border border-green-500">
+                      <div className="h-full bg-green-500" style={{ width: '47%' }}></div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
