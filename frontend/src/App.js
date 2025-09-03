@@ -555,19 +555,44 @@ function App() {
 
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <Label htmlFor="transfer_type" className="text-slate-300">Transfer Type</Label>
+                        <Label htmlFor="transfer_type" className="text-green-400 font-mono text-xs">TRANSFER_PROTOCOL:</Label>
                         <select
                           id="transfer_type"
                           value={transferForm.transfer_type}
                           onChange={(e) => setTransferForm({ ...transferForm, transfer_type: e.target.value })}
-                          className="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                          className="terminal-input text-xs mt-1"
                           required
                         >
-                          <option value="">Select type</option>
-                          <option value="M0">M0</option>
-                          <option value="M1">M1</option>
-                          <option value="SWIFT-MT">SWIFT-MT</option>
-                          <option value="SWIFT-MX">SWIFT-MX</option>
+                          <option value="">-- SELECT PROTOCOL --</option>
+                          <optgroup label="LEDGER TRANSFERS">
+                            <option value="L2L">L2L - Ledger to Ledger</option>
+                            <option value="ACH">ACH - Automated Clearing House</option>
+                            <option value="RTGS">RTGS - Real Time Gross Settlement</option>
+                          </optgroup>
+                          <optgroup label="SWIFT MT MESSAGES">
+                            <option value="MT103">MT103 - Single Customer Credit</option>
+                            <option value="MT202">MT202 - General Financial Institution Transfer</option>
+                            <option value="MT940">MT940 - Customer Statement Message</option>
+                            <option value="MT950">MT950 - Statement Message</option>
+                            <option value="MT760">MT760 - Guarantee</option>
+                          </optgroup>
+                          <optgroup label="ISO-20022 MX MESSAGES">
+                            <option value="MX-PACS008">MX-PACS008 - Financial Institution Credit Transfer</option>
+                            <option value="MX-PACS009">MX-PACS009 - Financial Institution Credit Transfer</option>
+                            <option value="MX-CAMT053">MX-CAMT053 - Bank to Customer Statement</option>
+                            <option value="MX-PAIN001">MX-PAIN001 - Customer Credit Transfer Initiation</option>
+                          </optgroup>
+                          <optgroup label="SWIFT GPI">
+                            <option value="GPI-MT103">GPI-MT103 - Global Payments Innovation</option>
+                            <option value="GPI-MT202">GPI-MT202 - GPI Financial Institution Transfer</option>
+                            <option value="GPI-COV">GPI-COV - Cover Payment</option>
+                          </optgroup>
+                          <optgroup label="SPECIALIZED">
+                            <option value="SEPA">SEPA - Single Euro Payments Area</option>
+                            <option value="FEDWIRE">FEDWIRE - Federal Reserve Wire Network</option>
+                            <option value="TARGET2">TARGET2 - Trans-European Automated Real-time Gross Settlement</option>
+                            <option value="CHIPS">CHIPS - Clearing House Interbank Payments System</option>
+                          </optgroup>
                         </select>
                       </div>
                       <div>
