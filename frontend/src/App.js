@@ -460,6 +460,27 @@ function App() {
     }
   };
 
+  const downloadTransferPDF = async (transferId) => {
+    try {
+      const response = await axios.get(`${API}/transfers/${transferId}/download-pdf`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob'
+      });
+      
+      // Create blob link to download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `K3RN3L808_Transfer_${transferId.substring(0, 8)}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert(`PDF download failed: ${error.response?.data?.detail || 'Unknown error'}`);
+    }
+  };
+
   const getStatusBadge = (status) => {
     const variants = {
       pending: 'outline',
