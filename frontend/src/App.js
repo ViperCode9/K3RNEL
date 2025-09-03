@@ -689,14 +689,14 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="md:col-span-1">
                         <Label htmlFor="transfer_type" className="text-green-400 font-mono text-xs">TRANSFER_PROTOCOL:</Label>
                         <select
                           id="transfer_type"
                           value={transferForm.transfer_type}
                           onChange={(e) => setTransferForm({ ...transferForm, transfer_type: e.target.value })}
-                          className="terminal-input text-xs mt-1"
+                          className="terminal-input text-xs mt-1 w-full"
                           required
                         >
                           <option value="">-- SELECT PROTOCOL --</option>
@@ -731,24 +731,24 @@ function App() {
                           </optgroup>
                         </select>
                       </div>
-                      <div>
-                        <Label htmlFor="amount" className="text-slate-300">Amount</Label>
+                      <div className="md:col-span-1">
+                        <Label htmlFor="amount" className="text-green-400 font-mono text-xs">AMOUNT:</Label>
                         <Input
                           id="amount"
                           type="number"
                           step="0.01"
                           value={transferForm.amount}
                           onChange={(e) => setTransferForm({ ...transferForm, amount: e.target.value })}
-                          className="bg-slate-700 border-slate-600 text-white"
+                          className="terminal-input text-xs mt-1"
                           required
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="currency" className="text-slate-300">Currency</Label>
+                      <div className="md:col-span-1">
+                        <Label htmlFor="currency" className="text-green-400 font-mono text-xs">CURRENCY:</Label>
                         <select
                           value={transferForm.currency}
                           onChange={(e) => setTransferForm({ ...transferForm, currency: e.target.value })}
-                          className="terminal-input text-xs mt-1"
+                          className="terminal-input text-xs mt-1 w-full"
                         >
                           <option value="EUR">EUR - Euro</option>
                           <option value="USD">USD - US Dollar</option>
