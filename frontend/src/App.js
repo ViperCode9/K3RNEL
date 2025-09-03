@@ -543,9 +543,9 @@ function App() {
               
               <Button type="submit" className="w-full terminal-button h-14 text-base font-bold mt-8">
                 <span className="flex items-center justify-center space-x-2">
-                  <span>>>></span>
+                  <span>&gt;&gt;&gt;</span>
                   <span>ESTABLISH SECURE CONNECTION</span>
-                  <span><<<</span>
+                  <span>&lt;&lt;&lt;</span>
                 </span>
               </Button>
             </form>
