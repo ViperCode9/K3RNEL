@@ -500,7 +500,7 @@ function App() {
                     FUND_TRANSFER_INIT_MODULE
                   </CardTitle>
                   <CardDescription className="text-green-600 font-mono text-xs mt-2">
-                    >> Initialize secure server-to-server fund transfer protocol
+                    {">> Initialize secure server-to-server fund transfer protocol"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
