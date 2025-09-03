@@ -879,6 +879,124 @@ async def simulate_security_incident(incident_type: str, current_user: dict = De
         "response_required": True
     }
 
+@api_router.get("/transfers/{transfer_id}/download-pdf")
+async def download_transfer_pdf(transfer_id: str, current_user: dict = Depends(verify_token)):
+    """Generate and download PDF receipt for a transfer"""
+    transfer = await db.transfers.find_one({"transfer_id": transfer_id})
+    if not transfer:
+        raise HTTPException(status_code=404, detail="Transfer not found")
+    
+    # Create PDF in memory
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
+    
+    # Custom styles
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        spaceAfter=30,
+        textColor=colors.black,
+        alignment=1  # Center alignment
+    )
+    
+    header_style = ParagraphStyle(
+        'CustomHeader',
+        parent=styles['Heading2'],
+        fontSize=14,
+        spaceBefore=20,
+        spaceAfter=10,
+        textColor=colors.darkblue
+    )
+    
+    content = []
+    
+    # Title
+    content.append(Paragraph("K3RN3L - 808 SWIFT TRANSFER RECEIPT", title_style))
+    content.append(Spacer(1, 20))
+    
+    # Transfer Information
+    content.append(Paragraph("TRANSFER INFORMATION", header_style))
+    
+    transfer_data = [
+        ["Transfer ID:", transfer.get("transfer_id", "N/A")[:32] + "..."],
+        ["Transfer Type:", transfer.get("transfer_type", "N/A")],
+        ["Amount:", f"{transfer.get('currency', 'EUR')} {transfer.get('amount', 0):,.2f}"],
+        ["Reference:", transfer.get("reference", "N/A")],
+        ["Status:", transfer.get("status", "N/A").upper()],
+        ["Date:", transfer.get("date", "N/A")[:19] if transfer.get("date") else "N/A"]
+    ]
+    
+    transfer_table = Table(transfer_data, colWidths=[2*inch, 4*inch])
+    transfer_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+        ('BACKGROUND', (0, 0), (0, -1), colors.grey),
+        ('TEXTCOLOR', (0, 0), (0, -1), colors.whitesmoke),
+    ]))
+    
+    content.append(transfer_table)
+    content.append(Spacer(1, 20))
+    
+    # Sender Information
+    content.append(Paragraph("SENDER INFORMATION", header_style))
+    sender_data = [
+        ["Sender Name:", transfer.get("sender_name", "N/A")],
+        ["Sender BIC:", transfer.get("sender_bic", "N/A")]
+    ]
+    
+    sender_table = Table(sender_data, colWidths=[2*inch, 4*inch])
+    sender_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightblue),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+    ]))
+    
+    content.append(sender_table)
+    content.append(Spacer(1, 20))
+    
+    # Receiver Information
+    content.append(Paragraph("RECEIVER INFORMATION", header_style))
+    receiver_data = [
+        ["Receiver Name:", transfer.get("receiver_name", "N/A")],
+        ["Receiver BIC:", transfer.get("receiver_bic", "N/A")]
+    ]
+    
+    receiver_table = Table(receiver_data, colWidths=[2*inch, 4*inch])
+    receiver_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgreen),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),  
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+    ]))
+    
+    content.append(receiver_table)
+    content.append(Spacer(1, 30))
+    
+    # Footer
+    content.append(Paragraph("This is an official K3RN3L - 808 SWIFT transfer receipt generated for training purposes.", styles['Normal']))
+    content.append(Paragraph(f"Generated on: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC", styles['Normal']))
+    
+    # Build PDF
+    doc.build(content)
+    buffer.seek(0)
+    
+    return StreamingResponse(
+        io.BytesIO(buffer.read()),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=K3RN3L808_Transfer_{transfer_id[:8]}.pdf"}
+    )
+
 @api_router.post("/transfers/advance-stage")
 async def advance_transfer_stage(stage_data: StageAdvancement, current_user: dict = Depends(verify_token)):
     if current_user["role"] not in ["admin", "officer"]:
