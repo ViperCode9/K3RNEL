@@ -428,7 +428,7 @@ function App() {
                 />
               </div>
               <Button type="submit" className="w-full terminal-button mt-6">
-                >> ESTABLISH SECURE CONNECTION
+                {">> ESTABLISH SECURE CONNECTION"}
               </Button>
             </form>
             <div className="mt-4 text-xs font-mono text-green-600">
