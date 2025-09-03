@@ -576,8 +576,8 @@ function App() {
           <div className="flex items-center">
             <div className="server-status online"></div>
             <Terminal className="h-5 w-5 text-green-400 mr-2" />
-            <h1 className="text-lg font-bold terminal-title">FUNDTRANS_SERVER_v8.08</h1>
-            <span className="ml-3 text-xs text-green-600 font-mono">:: NET_STATUS: ONLINE</span>
+            <h1 className="text-xl font-bold terminal-title">K3RN3L - 808</h1>
+            <span className="ml-3 text-xs text-green-600 font-mono">:: SWIFT_NETWORK: ONLINE</span>
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-xs text-green-400 font-mono">
