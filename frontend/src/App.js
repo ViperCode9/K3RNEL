@@ -633,10 +633,10 @@ function App() {
                 <CardHeader className="server-panel-header">
                   <CardTitle className="flex items-center terminal-title text-green-400 text-sm">
                     <Send className="h-4 w-4 mr-2 text-green-400" />
-                    FUND_TRANSFER_INIT_MODULE
+                    SWIFT_TRANSFER_INIT_MODULE
                   </CardTitle>
                   <CardDescription className="text-green-600 font-mono text-xs mt-2">
-                    {">> Initialize secure server-to-server fund transfer protocol"}
+                    {">> Initialize secure SWIFT network transfer instrument protocol"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
