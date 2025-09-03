@@ -190,40 +190,50 @@ body {
   80% { transform: translate(1px, -1px); }
 }
 
-/* Cyber Badge Variants */
+/* Terminal Status Badges */
 .badge-pending {
-  background: linear-gradient(45deg, #ff7f00, #ffbf00);
-  color: #000000;
-  text-shadow: none;
-  box-shadow: 0 0 10px rgba(255, 127, 0, 0.5);
+  background: #000000;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
 }
 
 .badge-processing {
-  background: linear-gradient(45deg, #00bfff, #0080ff);
-  color: #000000;
-  text-shadow: none;
-  box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+  background: #000000;
+  color: #00bfff;
+  border: 1px solid #00bfff;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
 }
 
 .badge-completed {
-  background: linear-gradient(45deg, #00ff7f, #00ffff);
-  color: #000000;
-  text-shadow: none;
-  box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+  background: #000000;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
 }
 
 .badge-rejected {
-  background: linear-gradient(45deg, #ff0040, #ff4080);
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+  background: #000000;
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
 
 .badge-held {
-  background: linear-gradient(45deg, #8000ff, #bf40ff);
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 10px rgba(128, 0, 255, 0.5);
+  background: #000000;
+  color: #ff8000;
+  border: 1px solid #ff8000;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 128, 0, 0.5);
 }
 
 /* Cyber Button Styles */
