@@ -380,6 +380,70 @@ function App() {
     }
   };
 
+  const fetchNetworkStatus = async () => {
+    try {
+      const response = await axios.get(`${API}/network/status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNetworkStatus(response.data);
+    } catch (error) {
+      console.error('Error fetching network status:', error);
+    }
+  };
+
+  const fetchServerPerformance = async () => {
+    try {
+      const response = await axios.get(`${API}/server/performance`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setServerPerformance(response.data);
+    } catch (error) {
+      console.error('Error fetching server performance:', error);
+    }
+  };
+
+  const fetchSecurityIncidents = async () => {
+    try {
+      const response = await axios.get(`${API}/security/incidents`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSecurityIncidents(response.data);
+    } catch (error) {
+      console.error('Error fetching security incidents:', error);
+    }
+  };
+
+  const executeCliCommand = async (command) => {
+    if (!command.trim()) return;
+    
+    try {
+      const response = await axios.post(`${API}/cli/execute`, {
+        command: command
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setCliHistory(prev => [...prev, `$ ${command}`]);
+      setCliOutput(prev => [...prev, ...response.data.output]);
+      setCliCommand('');
+    } catch (error) {
+      setCliOutput(prev => [...prev, `Error: ${error.response?.data?.detail || 'Command failed'}`]);
+    }
+  };
+
+  const simulateSecurityIncident = async (incidentType) => {
+    try {
+      const response = await axios.post(`${API}/security/simulate?incident_type=${incidentType}`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      alert(`Security incident simulated: ${response.data.message}`);
+      fetchSecurityIncidents();
+    } catch (error) {
+      alert(`Simulation failed: ${error.response?.data?.detail || 'Unknown error'}`);
+    }
+  };
+
   const getStatusBadge = (status) => {
     const variants = {
       pending: 'outline',
