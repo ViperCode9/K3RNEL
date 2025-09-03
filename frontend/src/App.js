@@ -914,6 +914,149 @@ function App() {
               </Card>
             </div>
 
+            {/* Live Network Status */}
+            {networkStatus && (
+              <Card className="terminal-card">
+                <div className="server-panel-header">
+                  <CardTitle className="terminal-title text-sm flex items-center">
+                    <Globe className="h-4 w-4 mr-2 text-green-400" />
+                    SWIFT_GLOBAL_NETWORK_STATUS
+                  </CardTitle>
+                </div>
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
+                    {Object.entries(networkStatus.swift_network).map(([region, data]) => (
+                      <div key={region} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-green-600">{region}:</span>
+                          <span className={`${data.status === 'online' ? 'text-green-400' : 'text-yellow-400'}`}>
+                            {data.status.toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="h-2 bg-black border border-green-500">
+                          <div 
+                            className={`h-full ${data.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'}`}
+                            style={{ width: `${data.load}%` }}
+                          ></div>
+                        </div>
+                        <div className="text-green-700 text-xs">
+                          {data.nodes} nodes | {data.latency}ms
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 grid grid-cols-3 gap-4 text-xs font-mono">
+                    <div className="text-center">
+                      <div className="text-green-600">TOTAL_NODES</div>
+                      <div className="text-green-400 font-bold">{networkStatus.total_nodes.toLocaleString()}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-green-600">MSG_PER_SEC</div>
+                      <div className="text-green-400 font-bold">{networkStatus.messages_per_second.toLocaleString()}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-green-600">ERROR_RATE</div>
+                      <div className="text-green-400 font-bold">{networkStatus.error_rate}%</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Server Performance Monitor */}
+            {serverPerformance && (
+              <Card className="terminal-card">
+                <div className="server-panel-header">
+                  <CardTitle className="terminal-title text-sm flex items-center">
+                    <Activity className="h-4 w-4 mr-2 text-green-400" />
+                    REAL_TIME_PERFORMANCE_MONITOR
+                  </CardTitle>
+                </div>
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
+                    <div className="space-y-2">
+                      <div className="text-green-600">CPU_USAGE</div>
+                      <div className="text-lg text-green-400 font-bold">{serverPerformance.cpu_usage.toFixed(1)}%</div>
+                      <div className="h-2 bg-black border border-green-500">
+                        <div className="h-full bg-green-500" style={{ width: `${serverPerformance.cpu_usage}%` }}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="text-green-600">MEMORY_USAGE</div>
+                      <div className="text-lg text-green-400 font-bold">{serverPerformance.memory_usage.toFixed(1)}%</div>
+                      <div className="h-2 bg-black border border-green-500">
+                        <div className="h-full bg-blue-500" style={{ width: `${serverPerformance.memory_usage}%` }}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="text-green-600">DISK_USAGE</div>
+                      <div className="text-lg text-green-400 font-bold">{serverPerformance.disk_usage.toFixed(1)}%</div>
+                      <div className="h-2 bg-black border border-green-500">
+                        <div className="h-full bg-yellow-500" style={{ width: `${serverPerformance.disk_usage}%` }}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="text-green-600">CONNECTIONS</div>
+                      <div className="text-lg text-green-400 font-bold">{serverPerformance.active_connections}</div>
+                      <div className="text-green-700 text-xs">TX/MIN: {serverPerformance.transactions_per_minute}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Security Incidents Monitor */}
+            {securityIncidents.length > 0 && (
+              <Card className="terminal-card">
+                <div className="server-panel-header">
+                  <CardTitle className="terminal-title text-sm flex items-center">
+                    <AlertTriangle className="h-4 w-4 mr-2 text-red-400" />
+                    SECURITY_INCIDENT_MONITOR
+                  </CardTitle>
+                </div>
+                <CardContent className="p-4">
+                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                    {securityIncidents.slice(0, 5).map((incident) => (
+                      <div key={incident.incident_id} className="flex items-center justify-between text-xs font-mono">
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-2 h-2 rounded-full ${
+                            incident.severity === 'critical' ? 'bg-red-500' :
+                            incident.severity === 'high' ? 'bg-orange-500' :
+                            incident.severity === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                          }`}></div>
+                          <span className="text-green-400">{incident.incident_type.toUpperCase()}</span>
+                        </div>
+                        <span className="text-green-600">{incident.status.toUpperCase()}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {user?.role === 'admin' && (
+                    <div className="mt-4 flex space-x-2">
+                      <Button
+                        onClick={() => simulateSecurityIncident('brute_force')}
+                        className="terminal-button text-xs px-2 py-1"
+                        size="sm"
+                      >
+                        SIM_BRUTE_FORCE
+                      </Button>
+                      <Button
+                        onClick={() => simulateSecurityIncident('high_value')}
+                        className="terminal-button text-xs px-2 py-1"
+                        size="sm"
+                      >
+                        SIM_HIGH_VALUE
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Dashboard Controls */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
