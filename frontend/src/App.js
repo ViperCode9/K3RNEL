@@ -433,24 +433,24 @@ function App() {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs defaultValue="simulation" className="space-y-6">
-          <TabsList className="bg-black/60 border-cyan-500/20">
+          <TabsList className="bg-black border-green-500">
             <TabsTrigger 
               value="simulation" 
-              className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400 font-mono text-cyan-500"
+              className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
             >
-              TRANSFER SIM
+              [INIT_TRANSFER]
             </TabsTrigger>
             <TabsTrigger 
               value="dashboard" 
-              className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400 font-mono text-cyan-500"
+              className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
             >
-              COMMAND CENTER
+              [SERVER_MONITOR]
             </TabsTrigger>
             <TabsTrigger 
               value="tracker" 
-              className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400 font-mono text-cyan-500"
+              className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
             >
-              NETWORK TRACE
+              [NET_TRACE]
             </TabsTrigger>
           </TabsList>
 
