@@ -2084,6 +2084,88 @@ function App() {
         </div>
       )}
 
+      {/* Command Line Interface Terminal */}
+      {showCliTerminal && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+          <div className="w-full max-w-6xl h-96 terminal-card">
+            <div className="terminal-header">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="server-status online"></div>
+                  <Terminal className="h-4 w-4 text-green-400 mr-2" />
+                  <span className="terminal-title text-xs">FUNDTRANS_CLI_TERMINAL</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCliTerminal(false)}
+                  className="text-red-400 hover:text-red-300 hover:bg-red-900/20 text-xs"
+                >
+                  [X]
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-4 h-full overflow-hidden flex flex-col">
+              <div className="text-green-400 font-mono text-xs mb-2">
+                FUNDTRANS SERVER v8.08 - Command Line Interface | Type 'help' for commands
+              </div>
+              
+              <ScrollArea className="flex-1 border border-green-500 p-3 bg-black mb-4">
+                <div className="font-mono text-xs space-y-1">
+                  {cliHistory.map((entry, index) => (
+                    <div key={index} className="text-green-600">{entry}</div>
+                  ))}
+                  {cliOutput.map((line, index) => (
+                    <div key={index} className="text-green-400">{line}</div>
+                  ))}
+                  <div className="text-green-400">
+                    <span className="terminal-cursor">▋</span> Ready for command...
+                  </div>
+                </div>
+              </ScrollArea>
+              
+              <div className="flex items-center space-x-2">
+                <span className="text-green-400 font-mono text-sm">$</span>
+                <Input
+                  value={cliCommand}
+                  onChange={(e) => setCliCommand(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      executeCliCommand(cliCommand);
+                    }
+                  }}
+                  className="terminal-input text-sm flex-1"
+                  placeholder="Enter command..."
+                  autoFocus
+                />
+                <Button
+                  onClick={() => executeCliCommand(cliCommand)}
+                  className="terminal-button text-xs px-3"
+                  size="sm"
+                >
+                  EXEC
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCliOutput([]);
+                    setCliHistory([]);
+                  }}
+                  className="terminal-button text-xs px-3"
+                  size="sm"
+                >
+                  CLEAR
+                </Button>
+              </div>
+              
+              <div className="mt-2 text-xs font-mono text-green-600">
+                Quick Commands: status | network ping | transfers list | alerts show | help
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Server Terminal Popup */}
       {showTerminalPopup && terminalTransfer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
