@@ -62,14 +62,11 @@ body {
 
 .terminal-title {
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   color: var(--primary-100);
-  text-shadow: 
-    0 0 8px rgba(0, 255, 65, 0.8),
-    0 0 16px rgba(0, 255, 65, 0.4),
-    0 0 24px rgba(0, 255, 65, 0.2);
+  font-size: 1.1em;
 }
 
 /* ASCII Art Styling */
