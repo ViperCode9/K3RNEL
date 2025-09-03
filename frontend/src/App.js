@@ -609,17 +609,20 @@ function App() {
                       </div>
                       <div>
                         <Label htmlFor="currency" className="text-slate-300">Currency</Label>
-                        <Select value={transferForm.currency} onValueChange={(value) => setTransferForm({ ...transferForm, currency: value })}>
-                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-slate-700 border-slate-600">
-                            <SelectItem value="USD">USD</SelectItem>
-                            <SelectItem value="EUR">EUR</SelectItem>
-                            <SelectItem value="GBP">GBP</SelectItem>
-                            <SelectItem value="JPY">JPY</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <select
+                          value={transferForm.currency}
+                          onChange={(e) => setTransferForm({ ...transferForm, currency: e.target.value })}
+                          className="terminal-input text-xs mt-1"
+                        >
+                          <option value="EUR">EUR - Euro</option>
+                          <option value="USD">USD - US Dollar</option>
+                          <option value="GBP">GBP - British Pound</option>
+                          <option value="JPY">JPY - Japanese Yen</option>
+                          <option value="CHF">CHF - Swiss Franc</option>
+                          <option value="CAD">CAD - Canadian Dollar</option>
+                          <option value="AUD">AUD - Australian Dollar</option>
+                          <option value="SEK">SEK - Swedish Krona</option>
+                        </select>
                       </div>
                     </div>
 
