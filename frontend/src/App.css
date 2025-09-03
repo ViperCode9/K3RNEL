@@ -64,11 +64,12 @@ body {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   color: var(--primary-100);
   text-shadow: 
-    0 0 5px rgba(255, 193, 7, 0.8),
-    0 0 10px rgba(255, 193, 7, 0.6);
+    0 0 8px rgba(0, 255, 65, 0.8),
+    0 0 16px rgba(0, 255, 65, 0.4),
+    0 0 24px rgba(0, 255, 65, 0.2);
 }
 
 /* ASCII Art Styling */
