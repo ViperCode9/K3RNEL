@@ -2037,62 +2037,113 @@ function App() {
 
       {/* SWIFT Connection Sequence */}
       {showConnectionSequence && (
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-          <div className="w-full max-w-4xl h-96 terminal-card p-0">
-            <div className="terminal-header">
-              <div className="flex items-center">
-                <div className="server-status online"></div>
-                <Terminal className="h-4 w-4 text-green-400 mr-2" />
-                <span className="terminal-title text-xs">SWIFT_NETWORK_AUTHENTICATION</span>
+        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
+          <div className="w-full max-w-6xl h-[32rem] bg-black border-2 border-green-500 shadow-2xl">
+            {/* Connection Header */}
+            <div className="bg-black border-b-2 border-green-500 p-4">
+              <div className="flex items-center justify-center space-x-4">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <Terminal className="h-6 w-6 text-green-500" />
+                <span className="terminal-title text-lg text-green-500">SWIFT_GLOBAL_NETWORK_CONNECTION</span>
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               </div>
             </div>
             
-            <div className="p-6 h-full overflow-y-auto">
-              <div className="ascii-art text-center mb-4 text-xs">
+            <div className="p-6 h-full overflow-hidden flex flex-col">
+              {/* ASCII Art Header */}
+              <div className="ascii-art text-center mb-6 text-green-500" style={{ fontSize: '8px', lineHeight: '1' }}>
 {`
-  ███████╗██╗    ██╗██╗███████╗████████╗    ███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
-  ██╔════╝██║    ██║██║██╔════╝╚══██╔══╝    ████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
-  ███████╗██║ █╗ ██║██║█████╗     ██║       ██╔██╗ ██║█████╗     ██║   ██║ █╗ ██║██║   ██║██████╔╝█████╔╝ 
-  ╚════██║██║███╗██║██║██╔══╝     ██║       ██║╚██╗██║██╔══╝     ██║   ██║███╗██║██║   ██║██╔══██╗██╔═██╗ 
-  ███████║╚███╔███╔╝██║██║        ██║       ██║ ╚████║███████╗   ██║   ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
-  ╚══════╝ ╚══╝╚══╝ ╚═╝╚═╝        ╚═╝       ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+███████╗██╗    ██╗██╗███████╗████████╗    ███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
+██╔════╝██║    ██║██║██╔════╝╚══██╔══╝    ████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
+███████╗██║ █╗ ██║██║█████╗     ██║       ██╔██╗ ██║█████╗     ██║   ██║ █╗ ██║██║   ██║██████╔╝█████╔╝ 
+╚════██║██║███╗██║██║██╔══╝     ██║       ██║╚██╗██║██╔══╝     ██║   ██║███╗██║██║   ██║██╔══██╗██╔═██╗ 
+███████║╚███╔███╔╝██║██║        ██║       ██║ ╚████║███████╗   ██║   ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
+╚══════╝ ╚══╝╚══╝ ╚═╝╚═╝        ╚═╝       ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 `}
               </div>
               
-              <div className="mb-4">
-                <div className="flex items-center mb-2">
-                  <span className="text-green-400 font-mono text-xs">CONNECTION_PROGRESS:</span>
-                  <div className="ml-3 flex-1 bg-black border border-green-500 h-4 relative">
+              {/* Progress Section */}
+              <div className="mb-6 space-y-4">
+                {/* Main Progress Bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-green-500 font-mono text-sm">
+                    <span>CONNECTION_PROGRESS:</span>
+                    <span>{connectionLogs.length > 0 ? connectionLogs[connectionLogs.length - 1]?.progress || 0 : 0}%</span>
+                  </div>
+                  <div className="w-full bg-black border-2 border-green-500 h-6 relative overflow-hidden">
                     <div 
-                      className="h-full bg-green-500 transition-all duration-500"
-                      style={{ width: `${((connectionStep + 1) / 13) * 100}%` }}
-                    ></div>
-                    <span className="absolute inset-0 flex items-center justify-center text-black font-mono text-xs font-bold">
-                      {Math.round(((connectionStep + 1) / 13) * 100)}%
-                    </span>
+                      className="h-full bg-gradient-to-r from-green-600 to-green-400 transition-all duration-1000 ease-out relative"
+                      style={{ width: `${connectionLogs.length > 0 ? connectionLogs[connectionLogs.length - 1]?.progress || 0 : 0}%` }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse"></div>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="font-mono text-xs font-bold text-black mix-blend-difference">
+                        {connectionLogs.length > 0 ? connectionLogs[connectionLogs.length - 1]?.progress || 0 : 0}% COMPLETE
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pipeline Status */}
+                <div className="grid grid-cols-3 gap-4 text-xs font-mono">
+                  <div className="text-center">
+                    <div className="text-orange-500 mb-1">CURRENT_PIPELINE:</div>
+                    <div className="text-green-400 font-bold">
+                      {connectionLogs.length > 0 ? connectionLogs[connectionLogs.length - 1]?.pipeline || 'INITIALIZING' : 'INITIALIZING'}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-orange-500 mb-1">TIME_REMAINING:</div>
+                    <div className="text-green-400 font-bold">
+                      {Math.max(0, 22 - Math.round((connectionStep / 15) * 22))}s
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-orange-500 mb-1">NETWORK_STATUS:</div>
+                    <div className="text-green-400 font-bold">CONNECTING</div>
                   </div>
                 </div>
               </div>
               
-              <div className="terminal-card p-4 h-64 overflow-y-auto">
-                <div className="font-mono text-xs space-y-1">
+              {/* Connection Logs */}
+              <div className="flex-1 bg-black border-2 border-green-500 p-4 overflow-y-auto">
+                <div className="font-mono text-sm space-y-2">
+                  <div className="text-green-500 mb-3 text-center">
+                    === FUNDTRANS BANKING NETWORK CONNECTION LOG ===
+                  </div>
                   {connectionLogs.map((log, index) => (
-                    <div key={index} className="text-green-400">
-                      <span className="text-green-600">[{new Date().toLocaleTimeString()}]</span> {log}
+                    <div key={index} className="flex items-start space-x-3">
+                      <span className="text-orange-500 text-xs w-20 flex-shrink-0">
+                        [{log.timestamp}]
+                      </span>
+                      <span className="text-yellow-400 text-xs w-24 flex-shrink-0">
+                        {log.pipeline}:
+                      </span>
+                      <span className="text-green-400 flex-1">
+                        {log.message}
+                      </span>
+                      <span className="text-green-600 text-xs w-12 text-right">
+                        {log.progress}%
+                      </span>
                     </div>
                   ))}
-                  <div className="text-green-400">
-                    <span className="terminal-cursor">▋</span> Processing...
-                  </div>
+                  {connectionLogs.length > 0 && (
+                    <div className="text-green-400 mt-4 flex items-center">
+                      <span className="terminal-cursor text-green-500">▋</span>
+                      <span className="ml-2 animate-pulse">ESTABLISHING SECURE BANKING CONNECTION...</span>
+                    </div>
+                  )}
                 </div>
               </div>
               
-              <div className="mt-4 text-center">
-                <div className="text-green-600 font-mono text-xs">
-                  ESTABLISHING SECURE CONNECTION TO SWIFT GLOBAL NETWORK
+              {/* Connection Footer */}
+              <div className="mt-4 text-center space-y-2">
+                <div className="text-orange-500 font-mono text-sm font-bold">
+                  CONNECTING TO SWIFT GLOBAL FINANCIAL NETWORK
                 </div>
-                <div className="text-green-500 font-mono text-xs mt-1">
-                  PLEASE WAIT... {22 - Math.round((connectionStep / 13) * 22)}s remaining
+                <div className="text-green-600 font-mono text-xs">
+                  FUNDTRANS SERVER v8.08 | SECURE BANKING OPERATIONS
                 </div>
               </div>
             </div>
