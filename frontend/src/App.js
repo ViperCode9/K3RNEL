@@ -84,6 +84,13 @@ function App() {
   const [showConnectionSequence, setShowConnectionSequence] = useState(false);
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionLogs, setConnectionLogs] = useState([]);
+  const [showCliTerminal, setShowCliTerminal] = useState(false);
+  const [cliCommand, setCliCommand] = useState('');
+  const [cliHistory, setCliHistory] = useState([]);
+  const [cliOutput, setCliOutput] = useState([]);
+  const [networkStatus, setNetworkStatus] = useState(null);
+  const [serverPerformance, setServerPerformance] = useState(null);
+  const [securityIncidents, setSecurityIncidents] = useState([]);
 
   useEffect(() => {
     if (token) {
