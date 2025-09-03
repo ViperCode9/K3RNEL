@@ -240,20 +240,21 @@ body {
 /* Banking Server Panel */
 .server-panel {
   background: var(--bg-200);
-  border: 2px solid var(--accent-100);
-  border-radius: 4px;
+  border: 2px solid var(--primary-300);
+  border-radius: 2px;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .server-panel-header {
-  background: linear-gradient(90deg, var(--bg-300) 0%, var(--accent-200) 100%);
-  border-bottom: 1px solid var(--accent-100);
-  padding: 8px 12px;
+  background: linear-gradient(90deg, var(--bg-300) 0%, var(--bg-400) 100%);
+  border-bottom: 1px solid var(--primary-100);
+  padding: 10px 16px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-100);
+  letter-spacing: 1.5px;
+  color: var(--primary-100);
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.6);
 }
 
 /* Glitch Effect */
