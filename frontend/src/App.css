@@ -7,16 +7,22 @@
 }
 
 :root {
-  --primary-100: #FFC107;
-  --primary-200: #dda400;
-  --primary-300: #916400;
-  --accent-100: #00BCD4;
-  --accent-200: #005e74;
-  --text-100: #FFFFFF;
-  --text-200: #9c9c9c;
-  --bg-100: #0B0F2B;
-  --bg-200: #1a1e3b;
-  --bg-300: #333554;
+  /* DARK, VIBRANT, TERMINAL, SERVER, FUNDS Theme */
+  --primary-100: #00FF41;    /* Vibrant Terminal Green */
+  --primary-200: #00CC33;    /* Medium Terminal Green */
+  --primary-300: #009926;    /* Dark Terminal Green */
+  --accent-100: #FF6B35;     /* Vibrant Orange/Red */
+  --accent-200: #CC5529;     /* Dark Orange */
+  --warning: #FFD700;        /* Gold Warning */
+  --success: #00FF41;        /* Terminal Green Success */
+  --error: #FF073A;          /* Vibrant Red Error */
+  --text-100: #FFFFFF;       /* Pure White */
+  --text-200: #B0B0B0;       /* Light Gray */
+  --text-300: #808080;       /* Medium Gray */
+  --bg-100: #000000;         /* Pure Black */
+  --bg-200: #0A0A0A;         /* Very Dark Gray */
+  --bg-300: #1A1A1A;         /* Dark Gray */
+  --bg-400: #2A2A2A;         /* Medium Dark Gray */
 }
 
 body {
