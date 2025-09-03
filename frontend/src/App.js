@@ -405,28 +405,30 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen text-cyan-300">
-      <header className="border-b border-cyan-500/20 bg-black/60 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div className="min-h-screen text-green-400 terminal-scanlines">
+      <header className="border-b border-green-500 bg-black">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <Terminal className="h-6 w-6 text-cyan-400 mr-2" />
-            <h1 className="text-xl font-bold cyber-title text-cyan-400">K3RN3L 808</h1>
-            <span className="ml-2 text-sm text-cyan-500 font-mono">BANKING NETWORK</span>
+            <div className="server-status online"></div>
+            <Terminal className="h-5 w-5 text-green-400 mr-2" />
+            <h1 className="text-lg font-bold terminal-title">FUNDTRANS_SERVER_v8.08</h1>
+            <span className="ml-3 text-xs text-green-600 font-mono">:: NET_STATUS: ONLINE</span>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-cyan-400 font-mono">
-              {user?.full_name} [{user?.role?.toUpperCase()}]
+            <span className="text-xs text-green-400 font-mono">
+              USR: {user?.username} | LVL: {user?.role?.toUpperCase()} | SID: {user?.id?.substring(0,8)}
             </span>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={logout}
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-400"
+              className="terminal-button text-xs px-2 py-1"
             >
-              DISCONNECT
+              >> LOGOUT
             </Button>
           </div>
         </div>
+        <div className="load-bar"></div>
       </header>
 
       <div className="container mx-auto px-4 py-6">
