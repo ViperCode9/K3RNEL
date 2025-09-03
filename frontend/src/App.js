@@ -64,7 +64,7 @@ function App() {
     receiver_bic: '',
     transfer_type: '',
     amount: '',
-    currency: 'USD',
+    currency: 'EUR',
     reference: '',
     purpose: ''
   });
