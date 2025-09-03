@@ -196,40 +196,42 @@ body {
   z-index: 1;
 }
 
-/* Terminal Card Effects */
+/* Banking Terminal Cards */
 .terminal-card {
-  background: #000000;
-  border: 1px solid #00ff00;
-  border-radius: 0;
+  background: linear-gradient(135deg, var(--bg-200) 0%, var(--bg-300) 100%);
+  border: 1px solid var(--accent-100);
+  border-radius: 4px;
   box-shadow: 
-    0 0 10px rgba(0, 255, 0, 0.2),
-    inset 0 0 10px rgba(0, 255, 0, 0.05);
-  transition: all 0.2s ease;
+    0 0 15px rgba(0, 188, 212, 0.3),
+    inset 0 1px 0 rgba(255, 193, 7, 0.1);
+  transition: all 0.3s ease;
 }
 
 .terminal-card:hover {
-  border-color: #00ff00;
+  border-color: var(--primary-100);
   box-shadow: 
-    0 0 15px rgba(0, 255, 0, 0.4),
-    inset 0 0 15px rgba(0, 255, 0, 0.1);
+    0 0 20px rgba(255, 193, 7, 0.4),
+    inset 0 1px 0 rgba(255, 193, 7, 0.2);
+  transform: translateY(-2px);
 }
 
-/* Server Panel */
+/* Banking Server Panel */
 .server-panel {
-  background: #000000;
-  border: 2px solid #00ff00;
-  border-radius: 0;
+  background: var(--bg-200);
+  border: 2px solid var(--accent-100);
+  border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .server-panel-header {
-  background: #001100;
-  border-bottom: 1px solid #00ff00;
+  background: linear-gradient(90deg, var(--bg-300) 0%, var(--accent-200) 100%);
+  border-bottom: 1px solid var(--accent-100);
   padding: 8px 12px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  color: var(--text-100);
 }
 
 /* Glitch Effect */
