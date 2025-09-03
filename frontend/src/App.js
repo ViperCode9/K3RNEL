@@ -214,25 +214,41 @@ function App() {
 
   const simulateConnectionSequence = async () => {
     const steps = [
-      { step: 0, message: "Initializing secure connection...", delay: 1000 },
-      { step: 1, message: "Connecting to SWIFT Global Network...", delay: 2000 },
-      { step: 2, message: "PING swift.com: 64 bytes from 195.35.171.130: icmp_seq=1 ttl=56 time=12.4ms", delay: 1500 },
-      { step: 3, message: "PING swift.com: 64 bytes from 195.35.171.130: icmp_seq=2 ttl=56 time=11.8ms", delay: 1500 },
-      { step: 4, message: "Network latency: 12.1ms | Jitter: 0.6ms | Status: OPTIMAL", delay: 2000 },
-      { step: 5, message: "Authenticating with SWIFT Alliance Connect...", delay: 2000 },
-      { step: 6, message: "PKI Certificate validation: PASSED", delay: 1500 },
-      { step: 7, message: "HSM Security Module: ONLINE", delay: 1500 },
-      { step: 8, message: "Establishing secure FIN.25 session...", delay: 2000 },
-      { step: 9, message: "Session ID: SES20250903015610-K3RN3L808", delay: 1500 },
-      { step: 10, message: "SWIFT Network Access: GRANTED", delay: 1500 },
-      { step: 11, message: "Loading banking modules...", delay: 2000 },
-      { step: 12, message: "Connection established. Welcome to FUNDTRANS SERVER v8.08", delay: 1000 }
+      { step: 0, message: ">>> INITIALIZING SECURE BANKING NETWORK CONNECTION", pipeline: "LOCAL_AUTH", delay: 1000, progress: 5 },
+      { step: 1, message: ">>> RESOLVING SWIFT GLOBAL NETWORK ENDPOINTS", pipeline: "DNS_RESOLVER", delay: 1500, progress: 10 },
+      { step: 2, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=1 ttl=56 time=8.2ms", pipeline: "NETWORK_TEST", delay: 1000, progress: 18 },
+      { step: 3, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=2 ttl=56 time=7.8ms", pipeline: "NETWORK_TEST", delay: 1000, progress: 25 },
+      { step: 4, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=3 ttl=56 time=8.1ms", pipeline: "NETWORK_TEST", delay: 1000, progress: 32 },
+      { step: 5, message: "NETWORK DIAGNOSTICS: RTT min/avg/max = 7.8/8.0/8.2ms | JITTER: 0.2ms", pipeline: "NETWORK_ANALYSIS", delay: 1500, progress: 40 },
+      { step: 6, message: ">>> ESTABLISHING TLS 1.3 TUNNEL TO SWIFT ALLIANCE GATEWAY", pipeline: "TLS_HANDSHAKE", delay: 2000, progress: 50 },
+      { step: 7, message: "PKI CERTIFICATE CHAIN VALIDATION: [PASSED] X.509v3 RSA-4096", pipeline: "PKI_VALIDATION", delay: 1500, progress: 60 },
+      { step: 8, message: "HSM SECURITY MODULE STATUS: [ONLINE] | KEY_ROTATION: CURRENT", pipeline: "HSM_SECURITY", delay: 1500, progress: 68 },
+      { step: 9, message: ">>> AUTHENTICATING WITH SWIFT ALLIANCE CONNECT v7.0.12", pipeline: "SWIFT_AUTH", delay: 2000, progress: 76 },
+      { step: 10, message: "SESSION_ID: SES-20250903-061847-FUNDTRANS-K3RN3L808", pipeline: "SESSION_MGR", delay: 1000, progress: 82 },
+      { step: 11, message: "FIN MESSAGE QUEUE: [READY] | MT_PARSER: [LOADED] | UETR_GEN: [ACTIVE]", pipeline: "MESSAGE_ENGINE", delay: 1500, progress: 88 },
+      { step: 12, message: "SWIFT NETWORK ACCESS GRANTED | CORRESPONDENT_BANKS: 11,254 ACTIVE", pipeline: "NETWORK_ACCESS", delay: 1500, progress: 94 },
+      { step: 13, message: ">>> LOADING BANKING MODULES: LEDGER | AML | COMPLIANCE | REPORTING", pipeline: "MODULE_LOADER", delay: 1500, progress: 98 },
+      { step: 14, message: "FUNDTRANS SERVER v8.08 CONNECTION ESTABLISHED | STATUS: READY", pipeline: "SYSTEM_READY", delay: 1000, progress: 100 }
     ];
 
+    let totalTime = 0;
     for (let i = 0; i < steps.length; i++) {
       setConnectionStep(i);
-      setConnectionLogs(prev => [...prev, steps[i].message]);
+      setConnectionLogs(prev => [...prev, {
+        message: steps[i].message,
+        pipeline: steps[i].pipeline,
+        timestamp: new Date().toLocaleTimeString(),
+        progress: steps[i].progress
+      }]);
+      
+      totalTime += steps[i].delay;
       await new Promise(resolve => setTimeout(resolve, steps[i].delay));
+    }
+    
+    // Ensure exactly 22 seconds total
+    const remainingTime = Math.max(0, 22000 - totalTime);
+    if (remainingTime > 0) {
+      await new Promise(resolve => setTimeout(resolve, remainingTime));
     }
     
     setShowConnectionSequence(false);
