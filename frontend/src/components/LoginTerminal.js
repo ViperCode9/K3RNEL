@@ -119,7 +119,7 @@ const LoginTerminal = ({ loginForm, setLoginForm, onLogin, isLoading }) => {
                   ) : (
                     <div className="flex items-center justify-center">
                       <Shield className="h-5 w-5 mr-2" />
-                      <span>>>> ESTABLISH SECURE CONNECTION <<<</span>
+                      <span>&gt;&gt;&gt; ESTABLISH SECURE CONNECTION &lt;&lt;&lt;</span>
                     </div>
                   )}
                 </Button>
