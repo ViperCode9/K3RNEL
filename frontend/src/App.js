@@ -543,38 +543,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen text-green-400 terminal-scanlines">
-      <header className="border-b border-green-500 bg-black">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="server-status online"></div>
-            <Terminal className="h-5 w-5 text-green-400 mr-2" />
-            <h1 className="text-xl font-bold terminal-title">K3RN3L - 808</h1>
-            <span className="ml-3 text-xs text-green-600 font-mono">:: SWIFT_NETWORK: ONLINE</span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-xs text-green-400 font-mono">
-              USR: {user?.username} | LVL: {user?.role?.toUpperCase()} | SID: {user?.id?.substring(0,8)}
-            </span>
-            <Button 
-              onClick={() => setShowCliTerminal(true)}
-              className="terminal-button text-xs px-2 py-1"
-              size="sm"
-            >
-              CLI_TERM
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={logout}
-              className="terminal-button text-xs px-2 py-1"
-            >
-              {">> LOGOUT"}
-            </Button>
-          </div>
-        </div>
-        <div className="load-bar"></div>
-      </header>
+    <div className="min-h-screen matrix-bg">
+      <TerminalMouse />
+      
+      {/* K3RN3L 808 Header */}
+      <K3RN3LHeader user={user} onLogout={logout} />
 
       <div className="container mx-auto px-4 py-6">
         <Tabs defaultValue="simulation" className="space-y-6">
