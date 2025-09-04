@@ -11,7 +11,7 @@ from decimal import Decimal, ROUND_HALF_UP
 import httpx
 from pydantic import BaseModel, Field, validator
 from fastapi import HTTPException
-import aioredis
+import redis.asyncio as redis
 import json
 import hashlib
 import os
