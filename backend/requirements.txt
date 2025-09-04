@@ -55,7 +55,6 @@ opentelemetry-exporter-jaeger>=1.21.0
 
 # Caching and Performance
 redis>=5.0.0
-asyncio-redis>=1.13.0
 aioredis>=2.0.0
 
 # Security enhancements
