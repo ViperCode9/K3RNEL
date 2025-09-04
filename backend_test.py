@@ -64,7 +64,7 @@ class K3RN3LBankingAPITester:
         """Test login with default admin credentials"""
         login_data = {
             "username": "kompx3",
-            "password": "K3RN3L808"
+            "password": "Chotti-Tannu9"
         }
         
         success, response = self.run_test(
