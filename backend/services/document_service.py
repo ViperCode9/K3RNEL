@@ -61,7 +61,7 @@ class DocumentRequest(BaseModel):
     additional_data: Optional[Dict[str, Any]] = {}
     include_qr_code: bool = True
     include_barcode: bool = True
-    watermark: Optional[str] = "EDUCATIONAL SIMULATION"
+    watermark: Optional[str] = "K3RN3L 808 BANKING NETWORK"
 
 class GeneratedDocument(BaseModel):
     """Generated document response."""
