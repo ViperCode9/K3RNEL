@@ -615,8 +615,8 @@ class K3RN3LBankingAPITester:
         return False
 
 def main():
-    print("🏦 K3RN3L 808 Banking Simulation API Testing")
-    print("=" * 50)
+    print("🏦 K3RN3L 808 Enhanced Banking Simulation API Testing")
+    print("=" * 60)
     
     # Initialize tester
     tester = K3RN3LBankingAPITester()
@@ -638,7 +638,64 @@ def main():
     if not tester.test_unauthorized_access():
         print("❌ Unauthorized access test failed")
     
-    print("\n📋 Running Transfer Tests...")
+    # Test system health
+    print("\n📋 Running System Health Tests...")
+    if not tester.test_system_health():
+        print("❌ System health check failed")
+    
+    # Test Enhanced Features - Exchange Rates Service
+    print("\n📋 Running Exchange Rates Service Tests...")
+    
+    if not tester.test_exchange_rates_health():
+        print("❌ Exchange rates health check failed")
+    
+    if not tester.test_supported_currencies():
+        print("❌ Supported currencies test failed")
+    
+    if not tester.test_latest_exchange_rates():
+        print("❌ Latest exchange rates test failed")
+    
+    if not tester.test_currency_conversion():
+        print("❌ Currency conversion test failed")
+    
+    if not tester.test_market_summary():
+        print("❌ Market summary test failed")
+    
+    # Test Enhanced Features - Analytics & Intelligence Service
+    print("\n📋 Running Analytics & Intelligence Service Tests...")
+    
+    if not tester.test_analytics_health():
+        print("❌ Analytics health check failed")
+    
+    if not tester.test_transaction_analytics():
+        print("❌ Transaction analytics test failed")
+    
+    if not tester.test_risk_scoring():
+        print("❌ Risk scoring test failed")
+    
+    if not tester.test_fraud_detection():
+        print("❌ Fraud detection test failed")
+    
+    if not tester.test_fraud_alerts():
+        print("❌ Fraud alerts test failed")
+    
+    # Test Enhanced Features - Professional Document Service
+    print("\n📋 Running Professional Document Service Tests...")
+    
+    if not tester.test_documents_health():
+        print("❌ Documents health check failed")
+    
+    if not tester.test_supported_banks():
+        print("❌ Supported banks test failed")
+    
+    document_id = tester.test_document_generation()
+    if not document_id:
+        print("❌ Document generation test failed")
+    else:
+        print(f"✅ Document generation successful: {document_id}")
+    
+    # Test Original SWIFT Banking Features
+    print("\n📋 Running Original SWIFT Banking Features Tests...")
     
     # Test transfer creation - create multiple transfers for bulk testing
     transfer_ids = []
@@ -701,14 +758,21 @@ def main():
             print("❌ Bulk transfer action failed")
     
     # Print final results
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print(f"📊 Test Results: {tester.tests_passed}/{tester.tests_run} tests passed")
     
     if tester.tests_passed == tester.tests_run:
-        print("🎉 All tests passed! Backend API is working correctly.")
+        print("🎉 All tests passed! Enhanced K3RN3L 808 Banking API is working correctly.")
+        print("✅ Exchange Rate Service: Operational")
+        print("✅ Analytics & Intelligence Service: Operational") 
+        print("✅ Professional Document Service: Operational")
+        print("✅ Original SWIFT Banking Features: Operational")
         return 0
     else:
-        print(f"⚠️  {tester.tests_run - tester.tests_passed} tests failed.")
+        failed_count = tester.tests_run - tester.tests_passed
+        print(f"⚠️  {failed_count} tests failed out of {tester.tests_run} total tests.")
+        success_rate = (tester.tests_passed / tester.tests_run) * 100
+        print(f"📈 Success Rate: {success_rate:.1f}%")
         return 1
 
 if __name__ == "__main__":
