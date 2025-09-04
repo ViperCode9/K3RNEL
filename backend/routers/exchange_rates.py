@@ -6,9 +6,11 @@ Provides endpoints for currency exchange operations
 from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from fastapi.responses import JSONResponse
 from typing import Dict, List, Optional, Any
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 import logging
+import numpy as np
+import random
 
 from ..services.exchange_rate_service import (
     ExchangeRateService, 
