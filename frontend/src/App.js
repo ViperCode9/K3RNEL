@@ -9,13 +9,6 @@ import { Badge } from "./components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
 import { Textarea } from "./components/ui/textarea";
 import { Label } from "./components/ui/label";
-import { Separator } from "./components/ui/separator";
-import { ScrollArea } from "./components/ui/scroll-area";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog";
-import { Checkbox } from "./components/ui/checkbox";
-import { Calendar } from "./components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/popover";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
 
 // K3RN3L 808 Professional Components
 import TerminalMouse from "./components/TerminalMouse";
