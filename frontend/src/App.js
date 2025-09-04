@@ -530,90 +530,15 @@ function App() {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 terminal-scanlines">
-        <Card className="w-full max-w-2xl bg-black border-2 border-green-500 shadow-2xl">
-          <CardHeader className="text-center p-8 border-b-2 border-green-500 bg-black">
-            <div className="ascii-art mb-6 text-green-500" style={{ fontSize: '9px', lineHeight: '1.1' }}>
-{`
-███████╗██╗   ██╗███╗   ██╗██████╗ ████████╗██████╗  █████╗ ███╗   ██╗███████╗
-██╔════╝██║   ██║████╗  ██║██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗████╗  ██║██╔════╝
-█████╗  ██║   ██║██╔██╗ ██║██║  ██║   ██║   ██████╔╝███████║██╔██╗ ██║███████╗
-██╔══╝  ██║   ██║██║╚██╗██║██║  ██║   ██║   ██╔══██╗██╔══██║██║╚██╗██║╚════██║
-██║     ╚██████╔╝██║ ╚████║██████╔╝   ██║   ██║  ██║██║  ██║██║ ╚████║███████║
-╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝
-`}
-            </div>
-            <CardTitle className="text-2xl font-bold terminal-title mb-4">
-              SERVER FUND TRANSFER TERMINAL
-            </CardTitle>
-            <CardDescription className="text-orange-500 font-mono text-sm space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                <div className="server-status online"></div>
-                <span>SECURE BANKING NETWORK :: AUTHENTICATED ACCESS REQUIRED</span>
-              </div>
-              <div className="text-green-600 text-xs">
-                FUNDTRANS v8.08 | SWIFT GLOBAL NETWORK | PRODUCTION ENVIRONMENT
-              </div>
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="p-8 bg-black">
-            <form onSubmit={login} className="space-y-6">
-              <div className="space-y-3">
-                <Label htmlFor="username" className="text-orange-500 font-mono text-sm font-bold flex items-center">
-                  <span className="mr-2">$</span> USER_ID:
-                </Label>
-                <Input
-                  id="username"
-                  type="text"
-                  value={loginForm.username}
-                  onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="terminal-input text-base h-12"
-                  placeholder="kompx3"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-3">
-                <Label htmlFor="password" className="text-orange-500 font-mono text-sm font-bold flex items-center">
-                  <span className="mr-2">$</span> AUTH_TOKEN:
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={loginForm.password}
-                  onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="terminal-input text-base h-12"
-                  placeholder="Chotti-Tannu9"
-                  required
-                />
-              </div>
-              
-              <Button type="submit" className="w-full terminal-button h-14 text-base font-bold mt-8">
-                <span className="flex items-center justify-center space-x-2">
-                  <span>&gt;&gt;&gt;</span>
-                  <span>ESTABLISH SECURE CONNECTION</span>
-                  <span>&lt;&lt;&lt;</span>
-                </span>
-              </Button>
-            </form>
-            
-            <div className="mt-6 p-4 bg-black border border-green-500 rounded">
-              <div className="text-xs font-mono space-y-1">
-                <div className="text-green-600">
-                  [SYSTEM] Waiting for authentication<span className="terminal-cursor animate-pulse">_</span>
-                </div>
-                <div className="text-orange-500">
-                  [NETWORK] SWIFT Global Network: ONLINE
-                </div>
-                <div className="text-green-600">
-                  [SECURITY] HSM Security Module: READY
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <>
+        <TerminalMouse />
+        <LoginTerminal
+          loginForm={loginForm}
+          setLoginForm={setLoginForm}
+          onLogin={login}
+          isLoading={false}
+        />
+      </>
     );
   }
 
