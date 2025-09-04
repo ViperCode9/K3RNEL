@@ -378,8 +378,8 @@ const DocumentGenerator = ({ token, transferData }) => {
 
         {/* Info */}
         <div className="text-xs text-green-600 font-mono bg-black/30 border border-green-500/20 rounded p-2">
-          <div className="font-bold mb-1">EDUCATIONAL SIMULATION:</div>
-          Documents are generated for training purposes only. All data is simulated and includes appropriate watermarks and disclaimers.
+          <div className="font-bold mb-1">K3RN3L 808 BANKING NETWORK:</div>
+          Professional banking documents generated with advanced security features including QR codes, barcodes, and digital authentication.
         </div>
       </CardContent>
     </Card>
