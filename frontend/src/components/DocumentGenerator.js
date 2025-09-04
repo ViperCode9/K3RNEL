@@ -92,8 +92,8 @@ const DocumentGenerator = ({ token, transferData }) => {
         include_barcode: includeBarcode,
         watermark: "K3RN3L 808 BANKING NETWORK",
         additional_data: {
-          generated_by: "K3RN3L 808 Banking Simulation",
-          simulation_mode: true
+          generated_by: "K3RN3L 808 Banking Network",
+          production_mode: true
         }
       };
 
