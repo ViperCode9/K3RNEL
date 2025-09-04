@@ -233,8 +233,8 @@ class ProfessionalDocumentService:
         canvas_obj.setStrokeColor(colors.blue)
         canvas_obj.circle(450, footer_y, 30, fill=0)
         canvas_obj.setFont("Helvetica-Bold", 6)
-        canvas_obj.drawCentredText(450, footer_y + 5, bank_template.bank_name.split()[0])
-        canvas_obj.drawCentredText(450, footer_y - 5, "OFFICIAL")
+        canvas_obj.drawString(435, footer_y + 5, bank_template.bank_name.split()[0])
+        canvas_obj.drawString(440, footer_y - 5, "OFFICIAL")
         
         # Print date
         canvas_obj.setFillColor(colors.grey)
