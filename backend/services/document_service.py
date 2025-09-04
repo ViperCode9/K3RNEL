@@ -406,7 +406,7 @@ class ProfessionalDocumentService:
             if request.include_barcode:
                 barcode_data = f"DEUT{transfer_data['transfer_id'][-12:]}"
                 canvas_obj.setFont("Helvetica", 8)
-                canvas_obj.drawCentredText(doc.pagesize[0]/2, doc.pagesize[1] - 15, barcode_data)
+                canvas_obj.drawString(doc.pagesize[0]/2 - 50, doc.pagesize[1] - 15, barcode_data)
         
         doc.build(story, onFirstPage=add_page_elements, onLaterPages=add_page_elements)
         
