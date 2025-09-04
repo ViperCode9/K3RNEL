@@ -2393,7 +2393,7 @@ CURRENT_STAGE: ${selectedTransfer.current_stage?.toUpperCase()} | LOCATION: ${se
               <div className="flex items-center justify-center space-x-4">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <Terminal className="h-6 w-6 text-green-500" />
-                <span className="terminal-title text-lg text-green-500">K3RN3L_808_BANKING_NETWORK_CONNECTION</span>
+                <span className="terminal-title text-lg text-green-500">K3RN3L_808_SECURE_BANKING_NETWORK</span>
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               </div>
             </div>
