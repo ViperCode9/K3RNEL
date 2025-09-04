@@ -12,7 +12,7 @@ import logging
 import numpy as np
 import random
 
-from ..services.exchange_rate_service import (
+from services.exchange_rate_service import (
     ExchangeRateService, 
     CurrencyConversionRequest,
     BulkConversionRequest,
@@ -20,7 +20,7 @@ from ..services.exchange_rate_service import (
     CurrencyPair,
     create_exchange_service
 )
-from ..dependencies import get_exchange_rate_service, verify_token
+from dependencies import get_exchange_rate_service, verify_token
 
 router = APIRouter(prefix="/api/exchange-rates", tags=["Exchange Rates"])
 logger = logging.getLogger(__name__)
