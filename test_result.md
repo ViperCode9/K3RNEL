@@ -146,15 +146,18 @@
 
   - task: "Professional Document Service API endpoints"
     implemented: true
-    working: false
+    working: true
     file: "/app/backend/routers/documents.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
         - working: false
           agent: "testing"
           comment: "Health endpoint working, supported banks endpoint working (2 banks: Deutsche Bank AG, JPMorgan Chase), but document generation failing with 500 Internal Server Error. Service dependencies not properly configured for PDF generation"
+        - working: true
+          agent: "testing"
+          comment: "Fixed PDF generation issue by replacing drawCentredText with drawString method. Document generation now working successfully with Deutsche Bank template, QR codes, and professional formatting"
 
   - task: "Original SWIFT Banking transfer system"
     implemented: true
@@ -169,16 +172,19 @@
           comment: "All original SWIFT banking features working perfectly. Transfer creation successful (3 transfers created), transfer retrieval working, transfer stats working (4 total transfers, $25.2M volume), stage system working (9 stages with proper progression), transfer actions working (approve/hold operations successful), bulk actions working"
 
   - task: "System health monitoring"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "/app/backend/server.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "medium"
     needs_retesting: false
     status_history:
         - working: "NA"
           agent: "testing"
           comment: "No /api/health endpoint found - returns 404 Not Found. System health monitoring not implemented"
+        - working: true
+          agent: "testing"
+          comment: "Added /api/health endpoint returning comprehensive system status including all service components. Health monitoring now fully operational"
 
 ## frontend:
   - task: "React frontend application and terminal-style UI"
