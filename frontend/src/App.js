@@ -22,6 +22,7 @@ import ExchangeRateWidget from "./components/ExchangeRateWidget";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import DocumentGenerator from "./components/DocumentGenerator";
 import BankSelector from "./components/BankSelector";
+import { GLOBAL_BANKS } from "./data/bankList";
 import { 
   Terminal, 
   Send, 
