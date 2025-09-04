@@ -11,8 +11,8 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 import logging
 
-from .services.exchange_rate_service import ExchangeRateService, ExchangeRateCache
-from .services.analytics_service import AnalyticsService
+from services.exchange_rate_service import ExchangeRateService, ExchangeRateCache
+from services.analytics_service import AnalyticsService
 
 logger = logging.getLogger(__name__)
 security = HTTPBearer()
