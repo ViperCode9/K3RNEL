@@ -68,7 +68,7 @@ class ExchangeRateCache:
     async def connect(self):
         """Connect to Redis."""
         if not self.redis_client:
-            self.redis_client = await aioredis.from_url(self.redis_url, decode_responses=True)
+            self.redis_client = await redis.from_url(self.redis_url, decode_responses=True)
     
     async def disconnect(self):
         """Disconnect from Redis."""
