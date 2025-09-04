@@ -203,19 +203,33 @@ function App() {
 
   const login = async (e) => {
     e.preventDefault();
+    
+    // Show connection sequence IMMEDIATELY after clicking login
+    setShowConnectionSequence(true);
+    setConnectionStep(0);
+    setConnectionLogs([]);
+    
     try {
-      const response = await axios.post(`${API}/auth/login`, loginForm);
-      const { access_token, user: userData } = response.data;
+      // Start connection sequence simulation while authenticating
+      const connectionPromise = simulateConnectionSequence();
+      const authPromise = axios.post(`${API}/auth/login`, loginForm);
       
-      // Start connection sequence
-      setShowConnectionSequence(true);
-      await simulateConnectionSequence();
+      // Wait for both authentication and connection sequence
+      const [authResponse] = await Promise.all([authPromise, connectionPromise]);
+      const { access_token, user: userData } = authResponse.data;
       
       setToken(access_token);
       setUser(userData);
       localStorage.setItem('token', access_token);
-      fetchTransfers();
+      
+      // Wait a moment to show completion then hide connection sequence
+      setTimeout(() => {
+        setShowConnectionSequence(false);
+        fetchTransfers();
+      }, 2000);
+      
     } catch (error) {
+      setShowConnectionSequence(false);
       alert('Login failed: ' + (error.response?.data?.detail || 'Unknown error'));
     }
   };
