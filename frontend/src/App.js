@@ -2129,6 +2129,348 @@ CURRENT_STAGE: ${selectedTransfer.current_stage?.toUpperCase()} | LOCATION: ${se
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Analytics Dashboard Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+              {/* Main Analytics Dashboard */}
+              <div className="xl:col-span-3">
+                <AnalyticsDashboard token={token} />
+              </div>
+              
+              {/* Real-time Risk Scoring */}
+              <div className="space-y-4">
+                <Card className="terminal-card">
+                  <CardHeader className="server-panel-header">
+                    <CardTitle className="terminal-title text-sm flex items-center">
+                      <AlertCircle className="h-4 w-4 mr-2 text-orange-400" />
+                      REAL_TIME_RISK_ENGINE
+                    </CardTitle>
+                    <CardDescription className="text-green-600 font-mono text-xs">
+                      AI-powered risk assessment and fraud detection
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="space-y-4">
+                      {/* Risk Score Simulator */}
+                      <div className="bg-black/50 border border-green-500/30 rounded p-3">
+                        <div className="text-green-400 font-mono text-xs mb-2">LIVE_RISK_SCORING</div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-orange-400 font-mono">0.247</div>
+                          <div className="text-green-600 text-xs">MEDIUM RISK</div>
+                        </div>
+                        <div className="mt-2">
+                          <div className="h-2 bg-black border border-green-500">
+                            <div className="h-full bg-orange-500" style={{ width: '24.7%' }}></div>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-xs text-green-600 font-mono">
+                          ML Model: Random Forest v2.1<br/>
+                          Confidence: 92.4%<br/>
+                          Last Updated: {new Date().toLocaleTimeString()}
+                        </div>
+                      </div>
+
+                      {/* Active Monitoring */}
+                      <div className="bg-black/50 border border-green-500/30 rounded p-3">
+                        <div className="text-green-400 font-mono text-xs mb-2">ACTIVE_MONITORING</div>
+                        <div className="space-y-2 text-xs font-mono">
+                          <div className="flex justify-between">
+                            <span className="text-green-600">TRANSACTIONS:</span>
+                            <span className="text-green-400">1,247</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-green-600">HIGH_RISK:</span>
+                            <span className="text-orange-400">23</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-green-600">BLOCKED:</span>
+                            <span className="text-red-400">3</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-green-600">FALSE_POS:</span>
+                            <span className="text-yellow-400">0.8%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Machine Learning Status */}
+                      <div className="bg-black/50 border border-green-500/30 rounded p-3">
+                        <div className="text-green-400 font-mono text-xs mb-2">ML_ENGINE_STATUS</div>
+                        <div className="space-y-1 text-xs font-mono">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span className="text-green-400">Fraud Detection: ACTIVE</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span className="text-green-400">Risk Scoring: ACTIVE</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                            <span className="text-orange-400">Pattern Analysis: TRAINING</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Exchange Rates & Market Data Tab */}
+          <TabsContent value="exchange" className="space-y-6">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              {/* Exchange Rate Widget */}
+              <div className="xl:col-span-2">
+                <ExchangeRateWidget token={token} />
+              </div>
+              
+              {/* Currency Converter */}
+              <div>
+                <Card className="terminal-card">
+                  <CardHeader className="server-panel-header">
+                    <CardTitle className="terminal-title text-sm flex items-center">
+                      <ArrowUpDown className="h-4 w-4 mr-2 text-green-400" />
+                      CURRENCY_CONVERTER
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-green-400 font-mono text-xs">FROM_CURRENCY</label>
+                        <Select defaultValue="USD">
+                          <SelectTrigger className="terminal-input mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="USD">USD - US Dollar</SelectItem>
+                            <SelectItem value="EUR">EUR - Euro</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <label className="text-green-400 font-mono text-xs">AMOUNT</label>
+                        <Input
+                          type="number"
+                          placeholder="Enter amount"
+                          className="terminal-input mt-1"
+                          defaultValue="1000"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="text-green-400 font-mono text-xs">TO_CURRENCY</label>
+                        <Select defaultValue="EUR">
+                          <SelectTrigger className="terminal-input mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="EUR">EUR - Euro</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                            <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <Button className="w-full terminal-button">
+                        CONVERT_CURRENCY
+                      </Button>
+                      
+                      <div className="bg-black/50 border border-green-500/30 rounded p-3">
+                        <div className="text-green-400 font-mono text-xs mb-2">CONVERSION_RESULT</div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-green-400 font-mono">€847.23</div>
+                          <div className="text-green-600 text-xs">Rate: 1 USD = 0.84723 EUR</div>
+                          <div className="text-green-600 text-xs">Spread: 0.0008 (0.1%)</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Market Analysis */}
+            <Card className="terminal-card">
+              <CardHeader className="server-panel-header">
+                <CardTitle className="terminal-title text-sm flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-2 text-green-400" />
+                  GLOBAL_MARKET_ANALYSIS
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Market Overview */}
+                  <div className="space-y-4">
+                    <h4 className="text-green-400 font-mono text-sm">MARKET_OVERVIEW</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-600">TRADING_PAIRS:</span>
+                        <span className="text-green-400">24</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-600">GAINERS:</span>
+                        <span className="text-green-400">14</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-600">LOSERS:</span>
+                        <span className="text-red-400">7</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-600">UNCHANGED:</span>
+                        <span className="text-gray-400">3</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Top Movers */}
+                  <div className="space-y-4">
+                    <h4 className="text-green-400 font-mono text-sm">TOP_GAINERS</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-400">USD/CHF</span>
+                        <span className="text-green-400">+2.34%</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-400">USD/CAD</span>
+                        <span className="text-green-400">+1.89%</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-green-400">USD/SEK</span>
+                        <span className="text-green-400">+1.12%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Volatility Index */}
+                  <div className="space-y-4">
+                    <h4 className="text-green-400 font-mono text-sm">VOLATILITY_INDEX</h4>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-400 font-mono">12.4</div>
+                      <div className="text-green-600 text-xs">MODERATE VOLATILITY</div>
+                    </div>
+                    <div className="h-2 bg-black border border-green-500">
+                      <div className="h-full bg-orange-500" style={{ width: '32%' }}></div>
+                    </div>
+                    <div className="text-xs text-green-600 font-mono text-center">
+                      24H Range: 8.2 - 15.7
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Document Generation Tab */}
+          <TabsContent value="documents" className="space-y-6">
+            <DocumentGenerator 
+              token={token} 
+              transferData={selectedTransfer || (transfers.length > 0 ? transfers[0] : null)} 
+            />
+            
+            {/* Document Templates Preview */}
+            <Card className="terminal-card">
+              <CardHeader className="server-panel-header">
+                <CardTitle className="terminal-title text-sm flex items-center">
+                  <FileText className="h-4 w-4 mr-2 text-green-400" />
+                  BANKING_DOCUMENT_TEMPLATES
+                </CardTitle>
+                <CardDescription className="text-green-600 font-mono text-xs">
+                  Professional banking document formats based on real bank templates
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Deutsche Bank Template */}
+                  <div className="bg-black/50 border border-green-500/30 rounded p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <Building2 className="h-5 w-5 text-blue-400" />
+                        <span className="text-blue-400 font-mono text-sm font-bold">DEUTSCHE BANK AG</span>
+                      </div>
+                      <Badge variant="outline" className="text-xs">GERMANY</Badge>
+                    </div>
+                    <div className="space-y-2 text-xs font-mono">
+                      <div className="text-green-600">SWIFT Code: DEUTDEFFXXX</div>
+                      <div className="text-green-600">Templates Available:</div>
+                      <ul className="ml-4 space-y-1 text-green-400">
+                        <li>• Balance Sheet ✓</li>
+                        <li>• SWIFT MT103 (Coming Soon)</li>
+                        <li>• Remittance Advice (Coming Soon)</li>
+                        <li>• Debit Note (Coming Soon)</li>
+                      </ul>
+                      <div className="text-green-600 mt-2">Security Features:</div>
+                      <ul className="ml-4 space-y-1 text-green-400">
+                        <li>• Official Bank Logos</li>
+                        <li>• QR Code Verification</li>
+                        <li>• Barcode Tracking</li>
+                        <li>• Digital Signatures</li>
+                        <li>• Watermarks</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Chase Bank Template */}
+                  <div className="bg-black/50 border border-green-500/30 rounded p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <Building2 className="h-5 w-5 text-blue-600" />
+                        <span className="text-blue-400 font-mono text-sm font-bold">JPMORGAN CHASE</span>
+                      </div>
+                      <Badge variant="outline" className="text-xs">USA</Badge>
+                    </div>
+                    <div className="space-y-2 text-xs font-mono">
+                      <div className="text-green-600">SWIFT Code: CHASUS33XXX</div>
+                      <div className="text-green-600">Templates Available:</div>
+                      <ul className="ml-4 space-y-1 text-green-400">
+                        <li>• Balance Sheet (Coming Soon)</li>
+                        <li>• SWIFT MT103 (Coming Soon)</li>
+                        <li>• Remittance Advice (Coming Soon)</li>
+                        <li>• Wire Transfer Receipt (Coming Soon)</li>
+                      </ul>
+                      <div className="text-green-600 mt-2">Features:</div>
+                      <ul className="ml-4 space-y-1 text-green-400">
+                        <li>• US Banking Format</li>
+                        <li>• Federal Compliance</li>
+                        <li>• ACH Integration</li>
+                        <li>• OFAC Screening</li>
+                        <li>• BSA Reporting</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Document Statistics */}
+                <div className="mt-6 pt-6 border-t border-green-500/30">
+                  <h4 className="text-green-400 font-mono text-sm mb-4">DOCUMENT_GENERATION_STATS</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
+                    <div className="text-center">
+                      <div className="text-green-600">GENERATED_TODAY</div>
+                      <div className="text-green-400 font-bold text-lg">247</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-green-600">TOTAL_DOWNLOADS</div>
+                      <div className="text-green-400 font-bold text-lg">1,892</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-green-600">SUCCESS_RATE</div>
+                      <div className="text-green-400 font-bold text-lg">98.7%</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-green-600">AVG_SIZE</div>
+                      <div className="text-green-400 font-bold text-lg">127KB</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
