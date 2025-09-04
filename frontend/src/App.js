@@ -703,52 +703,42 @@ function App() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={createTransfer} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="sender_name" className="text-green-400 font-mono text-xs">ORIGIN_SERVER:</Label>
-                        <Input
-                          id="sender_name"
-                          value={transferForm.sender_name}
-                          onChange={(e) => setTransferForm({ ...transferForm, sender_name: e.target.value })}
-                          className="terminal-input mt-1 text-xs"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="sender_bic" className="text-green-400 font-mono text-xs">ORIGIN_BIC:</Label>
-                        <Input
-                          id="sender_bic"
-                          value={transferForm.sender_bic}
-                          onChange={(e) => setTransferForm({ ...transferForm, sender_bic: e.target.value })}
-                          className="terminal-input mt-1 text-xs"
-                          placeholder="CHASUS33XXX"
-                          required
-                        />
-                      </div>
+                    {/* Sender Bank Selection */}
+                    <div className="space-y-4">
+                      <BankSelector
+                        label="ORIGIN_BANK_SELECTION"
+                        value={transferForm.sender_bic}
+                        onChange={(bic) => {
+                          const selectedBank = GLOBAL_BANKS.find(bank => bank.bic === bic);
+                          setTransferForm({ 
+                            ...transferForm, 
+                            sender_bic: bic,
+                            sender_name: selectedBank ? selectedBank.name : ''
+                          });
+                        }}
+                        placeholder="Select sending bank..."
+                        showDetails={true}
+                        filterCorrespondent={true}
+                      />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="receiver_name" className="text-slate-300">Receiver Name</Label>
-                        <Input
-                          id="receiver_name"
-                          value={transferForm.receiver_name}
-                          onChange={(e) => setTransferForm({ ...transferForm, receiver_name: e.target.value })}
-                          className="bg-slate-700 border-slate-600 text-white"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="receiver_bic" className="text-slate-300">Receiver BIC</Label>
-                        <Input
-                          id="receiver_bic"
-                          value={transferForm.receiver_bic}
-                          onChange={(e) => setTransferForm({ ...transferForm, receiver_bic: e.target.value })}
-                          className="bg-slate-700 border-slate-600 text-white"
-                          placeholder="DEUTDEFFXXX"
-                          required
-                        />
-                      </div>
+                    {/* Receiver Bank Selection */}
+                    <div className="space-y-4">
+                      <BankSelector
+                        label="TARGET_BANK_SELECTION"
+                        value={transferForm.receiver_bic}
+                        onChange={(bic) => {
+                          const selectedBank = GLOBAL_BANKS.find(bank => bank.bic === bic);
+                          setTransferForm({ 
+                            ...transferForm, 
+                            receiver_bic: bic,
+                            receiver_name: selectedBank ? selectedBank.name : ''
+                          });
+                        }}
+                        placeholder="Select receiving bank..."
+                        showDetails={true}
+                        excludeBank={transferForm.sender_bic}
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
