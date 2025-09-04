@@ -17,7 +17,10 @@ import { Calendar } from "./components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
 
-// Enhanced Components
+// K3RN3L 808 Professional Components
+import TerminalMouse from "./components/TerminalMouse";
+import K3RN3LHeader from "./components/K3RN3LHeader";
+import LoginTerminal from "./components/LoginTerminal";
 import ExchangeRateWidget from "./components/ExchangeRateWidget";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import DocumentGenerator from "./components/DocumentGenerator";
