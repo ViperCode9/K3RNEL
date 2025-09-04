@@ -1208,9 +1208,11 @@ app.include_router(api_router)
 # Include new enhanced routers
 from routers.exchange_rates import router as exchange_rates_router
 from routers.analytics import router as analytics_router
+from routers.documents import router as documents_router
 
 app.include_router(exchange_rates_router)
 app.include_router(analytics_router)
+app.include_router(documents_router)
 
 app.add_middleware(
     CORSMiddleware,
