@@ -202,7 +202,7 @@ class ProfessionalDocumentService:
             int(bank_template.primary_color[5:7], 16)/255
         ))
         canvas_obj.setFont("Helvetica-Bold", 10)
-        canvas_obj.drawCentredText(page_width - 80, page_height - 45, "SWIFT")
+        canvas_obj.drawString(page_width - 95, page_height - 45, "SWIFT")
     
     def _create_document_footer(self, canvas_obj, bank_template: BankTemplate, 
                                page_width: float, page_height: float, 
