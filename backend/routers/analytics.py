@@ -9,14 +9,14 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 import logging
 
-from ..services.analytics_service import (
+from services.analytics_service import (
     AnalyticsService,
     TransactionAnalytics,
     RiskScore,
     FraudAlert,
     MarketAnalysis
 )
-from ..dependencies import get_analytics_service, verify_token
+from dependencies import get_analytics_service, verify_token
 
 router = APIRouter(prefix="/api/analytics", tags=["Analytics & Intelligence"])
 logger = logging.getLogger(__name__)
