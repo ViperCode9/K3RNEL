@@ -626,7 +626,7 @@ function App() {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs defaultValue="simulation" className="space-y-6">
-          <TabsList className="bg-black border-green-500">
+          <TabsList className="bg-black border-green-500 grid grid-cols-2 md:grid-cols-6 w-full">
             <TabsTrigger 
               value="simulation" 
               className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
@@ -644,6 +644,24 @@ function App() {
               className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
             >
               [NET_TRACE]
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
+            >
+              [ANALYTICS_AI]
+            </TabsTrigger>
+            <TabsTrigger 
+              value="exchange" 
+              className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
+            >
+              [FX_MARKET]
+            </TabsTrigger>
+            <TabsTrigger 
+              value="documents" 
+              className="data-[state=active]:bg-green-900/20 data-[state=active]:text-green-400 data-[state=active]:border-green-400 font-mono text-green-600 text-xs"
+            >
+              [DOC_GEN]
             </TabsTrigger>
           </TabsList>
 
