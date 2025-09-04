@@ -2533,8 +2533,8 @@ CURRENT_STAGE: ${selectedTransfer.current_stage?.toUpperCase()} | LOCATION: ${se
                   </div>
                 </div>
 
-                {/* Pipeline Status */}
-                <div className="grid grid-cols-3 gap-4 text-xs font-mono">
+                {/* Enhanced Pipeline Status */}
+                <div className="grid grid-cols-4 gap-3 text-xs font-mono">
                   <div className="text-center">
                     <div className="text-orange-500 mb-1">CURRENT_PIPELINE:</div>
                     <div className="text-green-400 font-bold">
@@ -2544,12 +2544,38 @@ CURRENT_STAGE: ${selectedTransfer.current_stage?.toUpperCase()} | LOCATION: ${se
                   <div className="text-center">
                     <div className="text-orange-500 mb-1">TIME_REMAINING:</div>
                     <div className="text-green-400 font-bold">
-                      {Math.max(0, 22 - Math.round((connectionStep / 15) * 22))}s
+                      {Math.max(0, 18 - Math.round((connectionStep / 16) * 18))}s
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-orange-500 mb-1">NETWORK_STATUS:</div>
-                    <div className="text-green-400 font-bold">CONNECTING</div>
+                    <div className="text-orange-500 mb-1">NETWORK_LATENCY:</div>
+                    <div className="text-green-400 font-bold">
+                      {(8.2 + Math.random() * 4).toFixed(1)}ms
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-orange-500 mb-1">THROUGHPUT:</div>
+                    <div className="text-green-400 font-bold">
+                      {(2847 + Math.round(Math.random() * 500))} msg/s
+                    </div>
+                  </div>
+                </div>
+
+                {/* Network Statistics */}
+                <div className="bg-black/50 border border-green-500/30 rounded p-3 mt-4">
+                  <div className="grid grid-cols-3 gap-4 text-xs font-mono">
+                    <div>
+                      <div className="text-green-600">GLOBAL_NODES:</div>
+                      <div className="text-green-400">11,847 ACTIVE</div>
+                    </div>
+                    <div>
+                      <div className="text-green-600">ENCRYPTION:</div>
+                      <div className="text-green-400">AES-256-GCM</div>
+                    </div>
+                    <div>
+                      <div className="text-green-600">SESSION_ID:</div>
+                      <div className="text-green-400">K3RN3L-{Date.now().toString().slice(-6)}</div>
+                    </div>
                   </div>
                 </div>
               </div>
