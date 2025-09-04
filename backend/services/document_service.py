@@ -27,7 +27,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch, mm
 from reportlab.graphics.shapes import Drawing
 from reportlab.graphics.barcode import qr
-from reportlab.graphics.barcode.lto import BarcodeI2of5
+from reportlab.graphics.barcode import code128
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
 
 from pydantic import BaseModel, Field
