@@ -2488,7 +2488,7 @@ CURRENT_STAGE: ${selectedTransfer.current_stage?.toUpperCase()} | LOCATION: ${se
                     === K3RN3L 808 SECURE BANKING NETWORK CONNECTION LOG ===
                   </div>
                   <div className="text-green-600 mb-4 text-center text-xs">
-                    SWIFT Global Network • TLS 1.3 Encrypted • ISO 20022 Compliant
+                    SWIFT Global Network • AES-256 Encryption • Real-time Processing
                   </div>
                   {connectionLogs.map((log, index) => (
                     <div key={index} className="flex items-start space-x-3">
