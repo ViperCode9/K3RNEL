@@ -236,21 +236,22 @@ function App() {
 
   const simulateConnectionSequence = async () => {
     const steps = [
-      { step: 0, message: ">>> INITIALIZING SECURE BANKING NETWORK CONNECTION", pipeline: "LOCAL_AUTH", delay: 1000, progress: 5 },
-      { step: 1, message: ">>> RESOLVING SWIFT GLOBAL NETWORK ENDPOINTS", pipeline: "DNS_RESOLVER", delay: 1500, progress: 10 },
-      { step: 2, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=1 ttl=56 time=8.2ms", pipeline: "NETWORK_TEST", delay: 1000, progress: 18 },
-      { step: 3, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=2 ttl=56 time=7.8ms", pipeline: "NETWORK_TEST", delay: 1000, progress: 25 },
-      { step: 4, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=3 ttl=56 time=8.1ms", pipeline: "NETWORK_TEST", delay: 1000, progress: 32 },
-      { step: 5, message: "NETWORK DIAGNOSTICS: RTT min/avg/max = 7.8/8.0/8.2ms | JITTER: 0.2ms", pipeline: "NETWORK_ANALYSIS", delay: 1500, progress: 40 },
-      { step: 6, message: ">>> ESTABLISHING TLS 1.3 TUNNEL TO SWIFT ALLIANCE GATEWAY", pipeline: "TLS_HANDSHAKE", delay: 2000, progress: 50 },
-      { step: 7, message: "PKI CERTIFICATE CHAIN VALIDATION: [PASSED] X.509v3 RSA-4096", pipeline: "PKI_VALIDATION", delay: 1500, progress: 60 },
-      { step: 8, message: "HSM SECURITY MODULE STATUS: [ONLINE] | KEY_ROTATION: CURRENT", pipeline: "HSM_SECURITY", delay: 1500, progress: 68 },
-      { step: 9, message: ">>> AUTHENTICATING WITH SWIFT ALLIANCE CONNECT v7.0.12", pipeline: "SWIFT_AUTH", delay: 2000, progress: 76 },
-      { step: 10, message: "SESSION_ID: SES-20250903-061847-FUNDTRANS-K3RN3L808", pipeline: "SESSION_MGR", delay: 1000, progress: 82 },
-      { step: 11, message: "FIN MESSAGE QUEUE: [READY] | MT_PARSER: [LOADED] | UETR_GEN: [ACTIVE]", pipeline: "MESSAGE_ENGINE", delay: 1500, progress: 88 },
-      { step: 12, message: "SWIFT NETWORK ACCESS GRANTED | CORRESPONDENT_BANKS: 11,254 ACTIVE", pipeline: "NETWORK_ACCESS", delay: 1500, progress: 94 },
-      { step: 13, message: ">>> LOADING BANKING MODULES: LEDGER | AML | COMPLIANCE | REPORTING", pipeline: "MODULE_LOADER", delay: 1500, progress: 98 },
-      { step: 14, message: "FUNDTRANS SERVER v8.08 CONNECTION ESTABLISHED | STATUS: READY", pipeline: "SYSTEM_READY", delay: 1000, progress: 100 }
+      { step: 0, message: ">>> INITIALIZING K3RN3L 808 SECURE BANKING PROTOCOL", pipeline: "INIT_SEQUENCE", delay: 800, progress: 3 },
+      { step: 1, message: ">>> VALIDATING USER CREDENTIALS AGAINST HSM VAULT", pipeline: "CREDENTIAL_VAULT", delay: 600, progress: 8 },
+      { step: 2, message: "PKI CERTIFICATE VALIDATION: [PASSED] X.509v3 RSA-4096", pipeline: "PKI_VALIDATION", delay: 700, progress: 15 },
+      { step: 3, message: ">>> RESOLVING SWIFT GLOBAL NETWORK ENDPOINTS", pipeline: "DNS_RESOLVER", delay: 900, progress: 22 },
+      { step: 4, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=1 ttl=56 time=12.4ms", pipeline: "NETWORK_TEST", delay: 600, progress: 28 },
+      { step: 5, message: "PING swift.com (195.35.171.130): 64 bytes icmp_seq=2 ttl=56 time=11.8ms", pipeline: "NETWORK_TEST", delay: 500, progress: 34 },
+      { step: 6, message: "NETWORK DIAGNOSTICS: RTT min/avg/max = 11.8/12.1/12.4ms | JITTER: 0.3ms", pipeline: "NETWORK_ANALYSIS", delay: 800, progress: 42 },
+      { step: 7, message: ">>> ESTABLISHING TLS 1.3 ENCRYPTED TUNNEL TO SWIFT ALLIANCE", pipeline: "TLS_HANDSHAKE", delay: 1200, progress: 50 },
+      { step: 8, message: "SWIFT ALLIANCE GATEWAY HANDSHAKE: [SUCCESS] | CIPHER: AES-256-GCM", pipeline: "GATEWAY_HANDSHAKE", delay: 900, progress: 58 },
+      { step: 9, message: "HSM SECURITY MODULE STATUS: [ONLINE] | KEY_ROTATION: CURRENT", pipeline: "HSM_SECURITY", delay: 700, progress: 65 },
+      { step: 10, message: ">>> AUTHENTICATING WITH SWIFT ALLIANCE CONNECT v7.0.12", pipeline: "SWIFT_AUTH", delay: 1100, progress: 72 },
+      { step: 11, message: "SESSION_ID: SES-20250904-024847-FUNDTRANS-K3RN3L808", pipeline: "SESSION_MGR", delay: 600, progress: 78 },
+      { step: 12, message: "FIN MESSAGE QUEUE: [READY] | MT_PARSER: [LOADED] | UETR_GEN: [ACTIVE]", pipeline: "MESSAGE_ENGINE", delay: 800, progress: 84 },
+      { step: 13, message: "SWIFT NETWORK ACCESS GRANTED | CORRESPONDENT_BANKS: 11,847 ACTIVE", pipeline: "NETWORK_ACCESS", delay: 900, progress: 90 },
+      { step: 14, message: ">>> LOADING ENHANCED MODULES: ANALYTICS_AI | FX_MARKET | DOC_GEN", pipeline: "MODULE_LOADER", delay: 800, progress: 95 },
+      { step: 15, message: "K3RN3L 808 BANKING SIMULATION READY | ALL SYSTEMS OPERATIONAL", pipeline: "SYSTEM_READY", delay: 600, progress: 100 }
     ];
 
     let totalTime = 0;
