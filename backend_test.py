@@ -349,6 +349,271 @@ class K3RN3LBankingAPITester:
         self.token = original_token
         return success
 
+    # Enhanced Features Testing Methods
+    
+    def test_exchange_rates_health(self):
+        """Test exchange rates service health"""
+        success, response = self.run_test(
+            "Exchange Rates Health Check",
+            "GET",
+            "exchange-rates/health",
+            200
+        )
+        
+        if success and response.get('status') == 'healthy':
+            print(f"   ✅ Exchange rates service is healthy")
+            return True
+        return False
+
+    def test_supported_currencies(self):
+        """Test getting supported currencies"""
+        success, response = self.run_test(
+            "Get Supported Currencies",
+            "GET",
+            "exchange-rates/supported-currencies",
+            200
+        )
+        
+        if success and isinstance(response, list) and len(response) > 0:
+            print(f"   ✅ Retrieved {len(response)} supported currencies")
+            print(f"   ✅ Sample currencies: {response[:5]}")
+            return True
+        return False
+
+    def test_latest_exchange_rates(self):
+        """Test getting latest exchange rates"""
+        success, response = self.run_test(
+            "Get Latest Exchange Rates",
+            "GET",
+            "exchange-rates/latest?base_currency=USD",
+            200
+        )
+        
+        if success and 'rates' in response:
+            print(f"   ✅ Retrieved rates for {response.get('rate_count', 0)} currencies")
+            print(f"   ✅ Base currency: {response.get('base_currency')}")
+            return True
+        return False
+
+    def test_currency_conversion(self):
+        """Test currency conversion"""
+        conversion_data = {
+            "from_currency": "USD",
+            "to_currency": "EUR",
+            "amount": "1000.00"
+        }
+        
+        success, response = self.run_test(
+            "Currency Conversion",
+            "POST",
+            "exchange-rates/convert",
+            200,
+            data=conversion_data
+        )
+        
+        if success and 'converted_amount' in response:
+            print(f"   ✅ Converted {response.get('original_amount')} {response.get('from_currency')} to {response.get('converted_amount')} {response.get('to_currency')}")
+            print(f"   ✅ Exchange rate: {response.get('exchange_rate')}")
+            return True
+        return False
+
+    def test_market_summary(self):
+        """Test market summary"""
+        success, response = self.run_test(
+            "Market Summary",
+            "GET",
+            "exchange-rates/market-summary",
+            200
+        )
+        
+        if success and 'total_pairs' in response:
+            print(f"   ✅ Market summary with {response.get('total_pairs')} pairs")
+            print(f"   ✅ Market status: {response.get('market_status')}")
+            return True
+        return False
+
+    def test_analytics_health(self):
+        """Test analytics service health"""
+        success, response = self.run_test(
+            "Analytics Health Check",
+            "GET",
+            "analytics/health",
+            200
+        )
+        
+        if success and response.get('status') == 'healthy':
+            print(f"   ✅ Analytics service is healthy")
+            print(f"   ✅ ML models loaded: {response.get('ml_models_loaded')}")
+            return True
+        return False
+
+    def test_transaction_analytics(self):
+        """Test transaction analytics"""
+        success, response = self.run_test(
+            "Transaction Analytics",
+            "GET",
+            "analytics/transaction-analytics",
+            200
+        )
+        
+        if success and 'total_transactions' in response:
+            print(f"   ✅ Analytics for {response.get('total_transactions')} transactions")
+            print(f"   ✅ Total volume: {response.get('total_volume')}")
+            return True
+        return False
+
+    def test_risk_scoring(self):
+        """Test risk scoring with sample transfer data"""
+        risk_data = {
+            "transfer_id": "test_transfer_123",
+            "amount": 75000,
+            "currency": "USD",
+            "sender_bic": "CHASUS33XXX",
+            "receiver_bic": "HBUKGB4BXXX",
+            "sender_name": "JPMorgan Chase",
+            "receiver_name": "HSBC Bank"
+        }
+        
+        success, response = self.run_test(
+            "Risk Score Calculation",
+            "POST",
+            "analytics/risk-score",
+            200,
+            data=risk_data
+        )
+        
+        if success and 'risk_score' in response:
+            print(f"   ✅ Risk score: {response.get('risk_score')}")
+            print(f"   ✅ Risk level: {response.get('risk_level')}")
+            print(f"   ✅ Confidence: {response.get('confidence')}")
+            return True
+        return False
+
+    def test_fraud_detection(self):
+        """Test fraud detection"""
+        fraud_data = {
+            "transfer_id": "test_transfer_456",
+            "amount": 250000,
+            "currency": "USD",
+            "sender_bic": "UNKNOWNXXX",
+            "receiver_bic": "SUSPICIOUSXXX",
+            "sender_name": "Suspicious Entity",
+            "receiver_name": "High Risk Receiver"
+        }
+        
+        success, response = self.run_test(
+            "Fraud Detection",
+            "POST",
+            "analytics/fraud-detection",
+            200,
+            data=fraud_data
+        )
+        
+        if success and 'fraud_detected' in response:
+            print(f"   ✅ Fraud detection completed")
+            print(f"   ✅ Fraud detected: {response.get('fraud_detected')}")
+            if response.get('fraud_detected'):
+                alert = response.get('alert', {})
+                print(f"   ✅ Alert severity: {alert.get('severity')}")
+            return True
+        return False
+
+    def test_fraud_alerts(self):
+        """Test getting fraud alerts"""
+        success, response = self.run_test(
+            "Get Fraud Alerts",
+            "GET",
+            "analytics/fraud-alerts",
+            200
+        )
+        
+        if success and isinstance(response, list):
+            print(f"   ✅ Retrieved {len(response)} fraud alerts")
+            return True
+        return False
+
+    def test_documents_health(self):
+        """Test documents service health"""
+        success, response = self.run_test(
+            "Documents Health Check",
+            "GET",
+            "documents/health",
+            200
+        )
+        
+        if success and response.get('status') == 'healthy':
+            print(f"   ✅ Documents service is healthy")
+            print(f"   ✅ Supported banks: {response.get('supported_banks')}")
+            return True
+        return False
+
+    def test_supported_banks(self):
+        """Test getting supported banks"""
+        success, response = self.run_test(
+            "Get Supported Banks",
+            "GET",
+            "documents/supported-banks",
+            200
+        )
+        
+        if success and 'supported_banks' in response:
+            banks = response.get('supported_banks', [])
+            print(f"   ✅ Retrieved {len(banks)} supported banks")
+            if banks:
+                print(f"   ✅ Sample bank: {banks[0].get('bank_name')}")
+            return True
+        return False
+
+    def test_document_generation(self):
+        """Test document generation with Deutsche Bank template"""
+        doc_data = {
+            "transfer_data": {
+                "transfer_id": "TRK123456789",
+                "sender_name": "JPMorgan Chase",
+                "sender_bic": "CHASUS33XXX",
+                "receiver_name": "HSBC Bank",
+                "receiver_bic": "HBUKGB4BXXX",
+                "amount": 75000,
+                "currency": "USD",
+                "reference": "TRK123456789",
+                "purpose": "Testing document generation"
+            },
+            "bank_code": "DEUTDEFFXXX",
+            "include_qr_code": True,
+            "include_barcode": True,
+            "watermark": "EDUCATIONAL SIMULATION"
+        }
+        
+        success, response = self.run_test(
+            "Generate Balance Sheet Document",
+            "POST",
+            "documents/generate/balance_sheet",
+            200,
+            data=doc_data
+        )
+        
+        if success and response.get('success'):
+            print(f"   ✅ Document generated successfully")
+            print(f"   ✅ Document ID: {response.get('document_id')}")
+            print(f"   ✅ Bank code: {response.get('bank_code')}")
+            print(f"   ✅ File size: {response.get('file_size')} bytes")
+            return response.get('document_id')
+        return None
+
+    def test_system_health(self):
+        """Test overall system health"""
+        success, response = self.run_test(
+            "System Health Check",
+            "GET",
+            "health",
+            200
+        )
+        
+        if success:
+            print(f"   ✅ System health check passed")
+            return True
+        return False
+
 def main():
     print("🏦 K3RN3L 808 Banking Simulation API Testing")
     print("=" * 50)
