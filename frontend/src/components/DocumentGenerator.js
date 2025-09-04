@@ -90,7 +90,7 @@ const DocumentGenerator = ({ token, transferData }) => {
         bank_code: selectedBank,
         include_qr_code: includeQR,
         include_barcode: includeBarcode,
-        watermark: "EDUCATIONAL SIMULATION",
+        watermark: "K3RN3L 808 BANKING NETWORK",
         additional_data: {
           generated_by: "K3RN3L 808 Banking Simulation",
           simulation_mode: true
