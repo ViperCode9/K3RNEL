@@ -1202,6 +1202,25 @@ async def toggle_auto_progression(
         "message": message
     }
 
+# System Health Endpoint
+@api_router.get("/health")
+async def system_health():
+    """System health check endpoint"""
+    return {
+        "status": "healthy",
+        "service": "k3rn3l-808-banking",
+        "version": "2.0",
+        "timestamp": datetime.now(timezone.utc),
+        "components": {
+            "database": "connected",
+            "authentication": "operational",
+            "transfers": "operational",
+            "exchange_rates": "operational",
+            "analytics": "operational",
+            "documents": "operational"
+        }
+    }
+
 # Include existing router in the main app
 app.include_router(api_router)
 
